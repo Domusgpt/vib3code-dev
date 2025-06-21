@@ -383,9 +383,9 @@
     </style>
 </head>
 <body>
-    <!-- VIB34D Loading Overlay (Auto-Hide) -->
-    <div id="loading-overlay" class="loading-overlay hidden">
-        <div>🎨 VIB34D Style System Ready!</div>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div>🎨 Initializing PPP Style System...</div>
     </div>
     
     <!-- Header -->
@@ -569,22 +569,12 @@
         </div>
     </footer>
     
-    <!-- VIB34D Configuration (EASY TO ADJUST!) -->
-    <script>
-        window.VIB34DConfig = {
-            visualizerCount: 4,  // CHANGE THIS NUMBER! (3-6 recommended)
-            visualizerRoles: ['background', 'content', 'accent', 'overlay'],
-            defaultGeometry: 'hypercube',
-            defaultPreset: 'editorial'
-        };
-    </script>
-    
     <!-- VIB34D Style System - Complete Multi-Visualizer Framework -->
-    <script src="js/vib34d-core.js?v=20250621182000"></script>
-    <script src="js/vib34d-multi-instance.js?v=20250621182000"></script>
-    <script src="js/vib34d-home-master.js?v=20250621182000"></script>
-    <script src="js/vib34d-transition-engine.js?v=20250621182000"></script>
-    <script src="js/vib34d-style-system.js?v=20250621182000"></script>
+    <script src="js/vib34d-core.js?v=20250621180200"></script>
+    <script src="js/vib34d-multi-instance.js?v=20250621180200"></script>
+    <script src="js/vib34d-home-master.js?v=20250621180200"></script>
+    <script src="js/vib34d-transition-engine.js?v=20250621180200"></script>
+    <script src="js/vib34d-style-system.js?v=20250621180200"></script>
     
     <!-- Cache Clearing Debug -->
     <script>
@@ -598,10 +588,15 @@
     <script>
         // Enhanced page management
         function initializeVIB3CODEPilot() {
-            console.log('🚀 VIB3CODE VIB34D System Initializing...');
+            console.log('🚀 VIB3CODE PPP Pilot Project Initializing...');
             
-            // Hide loading overlay immediately - VIB34D system handles its own initialization
-            document.getElementById('loading-overlay').classList.add('hidden');
+            // Hide loading overlay once PPP system is ready
+            window.addEventListener('ppp-style-ready', () => {
+                setTimeout(() => {
+                    document.getElementById('loading-overlay').classList.add('hidden');
+                    updateSystemStatus();
+                }, 500);
+            });
             
             // Smooth scroll navigation
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -630,7 +625,7 @@
             
             sections.forEach(section => observer.observe(section));
             
-            console.log('✅ VIB3CODE VIB34D System Ready!');
+            console.log('✅ VIB3CODE PPP Pilot Project Ready!');
         }
         
         function updateSystemStatus() {

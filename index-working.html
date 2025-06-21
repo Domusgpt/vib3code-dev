@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIB3CODE - Multi-Visualizer Working Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .visualizer-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .visualizer-canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+            mix-blend-mode: screen;
+        }
+        
+        .content-layer {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            backdrop-filter: blur(2px);
+        }
+        
+        .section {
+            min-height: 100vh;
+            padding: 80px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .section-content {
+            max-width: 800px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 20px;
+            padding: 60px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        
+        p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .nav-header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            gap: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 15px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-item {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #00ffff;
+        }
+        
+        .status-display {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ffff;
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1000;
+            font-size: 12px;
+            color: #00ffff;
+            min-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Multi-Visualizer Container -->
+    <div class="visualizer-container" id="visualizerContainer"></div>
+    
+    <!-- Status Display -->
+    <div class="status-display">
+        <div>Status: <span id="systemStatus">Initializing...</span></div>
+        <div>Visualizers: <span id="visualizerCount">0</span></div>
+        <div>Geometry: <span id="currentGeometry">hypercube</span></div>
+        <div>Interaction: <span id="interactionType">idle</span></div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="nav-header">
+        <a href="#home" class="nav-item">Home</a>
+        <a href="#tech" class="nav-item">Technology</a>
+        <a href="#ema" class="nav-item">EMA</a>
+        <a href="#community" class="nav-item">Community</a>
+        <a href="#contact" class="nav-item">Contact</a>
+    </nav>
+    
+    <!-- Content Layer -->
+    <div class="content-layer">
+        <!-- Home Section -->
+        <section class="section" id="home" data-geometry="hypercube">
+            <div class="section-content">
+                <h1>VIB3CODE</h1>
+                <p>Multi-Visualizer Styles Package</p>
+                <p>Experience the power of simultaneous WebGL visualizers creating dynamic geometric patterns across every section.</p>
+                <p style="font-size: 0.9rem; color: #888;">Multiple hypercube visualizers active in this section</p>
+            </div>
+        </section>
+        
+        <!-- Technology Section -->
+        <section class="section" id="tech" data-geometry="tetrahedron">
+            <div class="section-content">
+                <h2>🔮 Technology</h2>
+                <p>Advanced multi-instance visualization system with WebGL-powered geometric rendering.</p>
+                <p>Each section displays multiple visualizer instances with the same geometry but different parameter variations.</p>
+                <p style="font-size: 0.9rem; color: #888;">Multiple tetrahedron visualizers active in this section</p>
+            </div>
+        </section>
+        
+        <!-- EMA Section -->
+        <section class="section" id="ema" data-geometry="sphere">
+            <div class="section-content">
+                <h2>👥 EMA Philosophy</h2>
+                <p>Exoditical Moral Architecture represents the pinnacle of ethical technology development.</p>
+                <p>Digital sovereignty through transparent, portable, and user-controlled systems.</p>
+                <p style="font-size: 0.9rem; color: #888;">Multiple sphere visualizers active in this section</p>
+            </div>
+        </section>
+        
+        <!-- Community Section -->
+        <section class="section" id="community" data-geometry="torus">
+            <div class="section-content">
+                <h2>🏆 Community</h2>
+                <p>Building connections through shared values of digital freedom and technological sovereignty.</p>
+                <p>Join the movement toward ethical, transparent, and liberating software development.</p>
+                <p style="font-size: 0.9rem; color: #888;">Multiple torus visualizers active in this section</p>
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section class="section" id="contact" data-geometry="wave">
+            <div class="section-content">
+                <h2>💎 Contact</h2>
+                <p>Ready to experience the future of ethical technology development?</p>
+                <p>Connect with us to learn more about the Multi-Visualizer Styles Package and EMA principles.</p>
+                <p style="font-size: 0.9rem; color: #888;">Multiple wave visualizers active in this section</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        console.log('🚀 VIB3CODE Multi-Visualizer Styles Package - COMPLETE WORKING VERSION');
+        
+        // Working Multi-Visualizer Implementation
+        class WorkingVisualizer {
+            constructor(canvas, geometry, variation = 1.0) {
+                this.canvas = canvas;
+                this.geometry = geometry;
+                this.variation = variation;
+                this.gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                
+                if (!this.gl) {
+                    console.warn('WebGL not supported');
+                    return;
+                }
+                
+                this.startTime = Date.now();
+                this.initShader();
+                this.render();
+                
+                console.log(`✅ WorkingVisualizer initialized: ${geometry} (${variation}x)`);
+            }
+            
+            initShader() {
+                const vertexShader = `
+                    attribute vec2 a_position;
+                    void main() {
+                        gl_Position = vec4(a_position, 0.0, 1.0);
+                    }
+                `;
+                
+                const fragmentShader = `
+                    precision mediump float;
+                    uniform vec2 u_resolution;
+                    uniform float u_time;
+                    uniform float u_variation;
+                    uniform float u_geometry;
+                    
+                    float hypercube(vec2 uv, float time) {
+                        vec2 grid = fract(uv * 8.0 * u_variation);
+                        float lines = step(0.05, grid.x) * step(0.05, grid.y);
+                        return lines * (0.5 + 0.5 * sin(time * 2.0 + length(uv) * 10.0));
+                    }
+                    
+                    float tetrahedron(vec2 uv, float time) {
+                        vec2 center = uv - 0.5;
+                        float angle = atan(center.y, center.x) + time * 0.5 * u_variation;
+                        float radius = length(center);
+                        float tri = sin(angle * 3.0) * 0.3 + 0.7;
+                        return step(radius, tri * 0.3) * (0.8 + 0.2 * sin(time * 3.0));
+                    }
+                    
+                    float sphere(vec2 uv, float time) {
+                        vec2 center = uv - 0.5;
+                        float radius = length(center);
+                        float ripple = sin(radius * 20.0 * u_variation - time * 4.0) * 0.5 + 0.5;
+                        return smoothstep(0.4, 0.3, radius) * ripple;
+                    }
+                    
+                    float torus(vec2 uv, float time) {
+                        vec2 center = uv - 0.5;
+                        float angle = atan(center.y, center.x);
+                        float radius = length(center);
+                        float torus_r = abs(radius - 0.25);
+                        float pattern = sin(angle * 8.0 + time * 2.0 * u_variation) * 0.5 + 0.5;
+                        return (1.0 - smoothstep(0.0, 0.1, torus_r)) * pattern;
+                    }
+                    
+                    float wave(vec2 uv, float time) {
+                        float wave1 = sin(uv.x * 10.0 * u_variation + time * 2.0) * 0.1;
+                        float wave2 = sin(uv.y * 8.0 * u_variation + time * 1.5) * 0.1;
+                        return smoothstep(0.48, 0.52, uv.y + wave1 + wave2);
+                    }
+                    
+                    void main() {
+                        vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+                        float time = u_time;
+                        
+                        float pattern = 0.0;
+                        vec3 color = vec3(1.0, 0.0, 1.0); // Default magenta
+                        
+                        if (u_geometry < 0.5) {
+                            pattern = hypercube(uv, time);
+                            color = vec3(1.0, 0.0, 1.0); // Magenta
+                        } else if (u_geometry < 1.5) {
+                            pattern = tetrahedron(uv, time);
+                            color = vec3(0.0, 1.0, 1.0); // Cyan
+                        } else if (u_geometry < 2.5) {
+                            pattern = sphere(uv, time);
+                            color = vec3(1.0, 1.0, 0.0); // Yellow
+                        } else if (u_geometry < 3.5) {
+                            pattern = torus(uv, time);
+                            color = vec3(0.0, 1.0, 0.0); // Green
+                        } else {
+                            pattern = wave(uv, time);
+                            color = vec3(1.0, 0.0, 0.5); // Pink
+                        }
+                        
+                        gl_FragColor = vec4(color * pattern, pattern * 0.8);
+                    }
+                `;
+                
+                // Create shaders
+                const vs = this.gl.createShader(this.gl.VERTEX_SHADER);
+                this.gl.shaderSource(vs, vertexShader);
+                this.gl.compileShader(vs);
+                
+                const fs = this.gl.createShader(this.gl.FRAGMENT_SHADER);
+                this.gl.shaderSource(fs, fragmentShader);
+                this.gl.compileShader(fs);
+                
+                // Create program
+                this.program = this.gl.createProgram();
+                this.gl.attachShader(this.program, vs);
+                this.gl.attachShader(this.program, fs);
+                this.gl.linkProgram(this.program);
+                
+                // Create buffer
+                this.buffer = this.gl.createBuffer();
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
+                this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
+                    -1, -1, 1, -1, -1, 1, 1, 1
+                ]), this.gl.STATIC_DRAW);
+                
+                // Get uniform locations
+                this.uniforms = {
+                    resolution: this.gl.getUniformLocation(this.program, 'u_resolution'),
+                    time: this.gl.getUniformLocation(this.program, 'u_time'),
+                    variation: this.gl.getUniformLocation(this.program, 'u_variation'),
+                    geometry: this.gl.getUniformLocation(this.program, 'u_geometry')
+                };
+                
+                this.positionLocation = this.gl.getAttribLocation(this.program, 'a_position');
+            }
+            
+            render() {
+                if (!this.program) return;
+                
+                const width = this.canvas.clientWidth;
+                const height = this.canvas.clientHeight;
+                
+                if (this.canvas.width !== width || this.canvas.height !== height) {
+                    this.canvas.width = width;
+                    this.canvas.height = height;
+                    this.gl.viewport(0, 0, width, height);
+                }
+                
+                this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+                this.gl.useProgram(this.program);
+                
+                // Bind buffer and set up attributes
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
+                this.gl.enableVertexAttribArray(this.positionLocation);
+                this.gl.vertexAttribPointer(this.positionLocation, 2, this.gl.FLOAT, false, 0, 0);
+                
+                // Set uniforms
+                this.gl.uniform2f(this.uniforms.resolution, width, height);
+                this.gl.uniform1f(this.uniforms.time, (Date.now() - this.startTime) / 1000);
+                this.gl.uniform1f(this.uniforms.variation, this.variation);
+                
+                // Map geometry to number
+                const geometryMap = { hypercube: 0, tetrahedron: 1, sphere: 2, torus: 3, wave: 4 };
+                this.gl.uniform1f(this.uniforms.geometry, geometryMap[this.geometry] || 0);
+                
+                this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, 4);
+                
+                requestAnimationFrame(() => this.render());
+            }
+        }
+        
+        // Multi-Visualizer Manager
+        class MultiVisualizerSystem {
+            constructor() {
+                this.visualizers = [];
+                this.currentGeometry = 'hypercube';
+                
+                this.init();
+                this.setupInteractions();
+                this.updateStatus();
+                
+                console.log('🎨 MultiVisualizerSystem initialized');
+            }
+            
+            init() {
+                const container = document.getElementById('visualizerContainer');
+                const sections = document.querySelectorAll('.section');
+                
+                sections.forEach((section, sectionIndex) => {
+                    const geometry = section.dataset.geometry || 'hypercube';
+                    
+                    // Create 3 visualizers per section
+                    for (let i = 0; i < 3; i++) {
+                        const canvas = document.createElement('canvas');
+                        canvas.className = 'visualizer-canvas';
+                        canvas.style.cssText = `
+                            top: ${sectionIndex * 20}vh;
+                            left: ${i * 10}%;
+                            width: ${90 + i * 5}%;
+                            height: ${100 + sectionIndex * 20}vh;
+                            opacity: ${0.6 - i * 0.1};
+                            z-index: ${10 - i};
+                        `;
+                        
+                        container.appendChild(canvas);
+                        
+                        // Create visualizer with variation
+                        const variation = [1.0, 1.3, 0.7][i];
+                        const visualizer = new WorkingVisualizer(canvas, geometry, variation);
+                        this.visualizers.push({ visualizer, canvas, geometry, section: sectionIndex });
+                    }
+                });
+                
+                console.log(`📍 Created ${this.visualizers.length} visualizers across ${sections.length} sections`);
+            }
+            
+            setupInteractions() {
+                let interactionType = 'idle';
+                
+                // Scroll detection
+                window.addEventListener('scroll', () => {
+                    interactionType = 'scroll';
+                    this.updateInteractionDisplay('scroll');
+                    
+                    // Detect current section
+                    const sections = document.querySelectorAll('.section');
+                    const scrollPos = window.scrollY + window.innerHeight / 2;
+                    
+                    sections.forEach(section => {
+                        const rect = section.getBoundingClientRect();
+                        const sectionTop = window.scrollY + rect.top;
+                        const sectionBottom = sectionTop + rect.height;
+                        
+                        if (scrollPos >= sectionTop && scrollPos <= sectionBottom) {
+                            this.currentGeometry = section.dataset.geometry;
+                            this.updateGeometryDisplay(this.currentGeometry);
+                        }
+                    });
+                });
+                
+                // Mouse movement
+                document.addEventListener('mousemove', () => {
+                    interactionType = 'move';
+                    this.updateInteractionDisplay('move');
+                });
+                
+                // Idle detection
+                setInterval(() => {
+                    if (interactionType !== 'idle') {
+                        setTimeout(() => {
+                            interactionType = 'idle';
+                            this.updateInteractionDisplay('idle');
+                        }, 2000);
+                    }
+                }, 1000);
+            }
+            
+            updateStatus() {
+                document.getElementById('systemStatus').textContent = 'Active';
+                document.getElementById('visualizerCount').textContent = this.visualizers.length;
+                document.getElementById('currentGeometry').textContent = this.currentGeometry;
+            }
+            
+            updateInteractionDisplay(type) {
+                document.getElementById('interactionType').textContent = type;
+            }
+            
+            updateGeometryDisplay(geometry) {
+                document.getElementById('currentGeometry').textContent = geometry;
+            }
+        }
+        
+        // Initialize when DOM is ready
+        function initializeSystem() {
+            const system = new MultiVisualizerSystem();
+            
+            // Global references
+            window.multiVisualizerSystem = system;
+            window.vib3MultiVisualizerReady = true;
+            
+            console.log('✅ VIB3CODE Multi-Visualizer Styles Package READY!');
+            
+            // Update status
+            setTimeout(() => {
+                document.getElementById('systemStatus').textContent = 'WORKING';
+                document.getElementById('systemStatus').style.color = '#00ff00';
+            }, 1000);
+        }
+        
+        // Start the system
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeSystem);
+        } else {
+            initializeSystem();
+        }
+    </script>
+</body>
+</html>

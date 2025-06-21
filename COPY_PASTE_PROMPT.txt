@@ -1,0 +1,27 @@
+I need to implement a Multi-Visualizer Styles Package for the VIB3CODE website. This is NOT a single background visualizer - each webpage section must display 3+ simultaneous visualizer instances with the same geometry but different parameter variations.
+
+CRITICAL: Start from the WORKING DEMO at C:\Users\millz\Desktop\vibecodestyle demo\index.html.html rather than debugging the broken kernel system.
+
+The current site has JavaScript errors:
+- TypeError: this.createGlassmorphicPanels is not a function  
+- Canvas context null errors
+- WebGL shader failures
+
+Project location: /mnt/c/Users/millz/ParseratorMarketing/vib3code-blog-experiment/
+
+Please read these documentation files first:
+1. CLAUDE_OPUS_PROMPT.md - Full implementation requirements
+2. CLAUDE.md - Architecture documentation  
+3. QUICK_REFERENCE.md - Checklist and key points
+4. shared-reactive-core/home-master-system.js - Parameter relationships
+
+The key requirement is that each section (Home, Articles, Videos, Podcasts, EMA) displays MULTIPLE visualizer instances:
+- Home: 3+ hypercubes
+- Articles: 3+ tetrahedrons
+- Videos: 3+ spheres  
+- Podcasts: 3+ tori
+- EMA: 3+ waves
+
+Within each section, all instances use the same geometry but with parameter variations (rotation speed, scale, etc). The Home section acts as master controller, with other sections deriving their base parameters from Home through mathematical relationships.
+
+Please start by examining the working demo to understand what works, then build a proper multi-instance visualizer system that can handle 15+ simultaneous visualizers with good performance.
