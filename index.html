@@ -572,10 +572,30 @@
     <!-- VIB34D Configuration (EASY TO ADJUST!) -->
     <script>
         window.VIB34DConfig = {
+            // ===== CORE VISUALIZER SETTINGS =====
             visualizerCount: 4,  // CHANGE THIS NUMBER! (3-6 recommended)
             visualizerRoles: ['background', 'content', 'accent', 'overlay'],
             defaultGeometry: 'hypercube',
-            defaultPreset: 'editorial'
+            defaultPreset: 'editorial',
+            
+            // ===== INFINITE SCROLL SETTINGS =====
+            enableInfiniteScroll: true,
+            portalEffectsEnabled: true,
+            defaultTransitionRule: 'smooth',
+            
+            // ===== CRYSTAL UI SETTINGS =====
+            enableCrystalUI: true,
+            crystalBackboneEnabled: true,
+            unifyAllSections: true,
+            
+            // ===== PERFORMANCE SETTINGS =====
+            targetFPS: 60,
+            enableViewportOptimization: true,
+            
+            // ===== EDITOR SETTINGS =====
+            editorMode: false,    // Set to TRUE for editor controls
+            showControls: false,  // Set to TRUE to show parameter controls
+            debugMode: false      // Set to TRUE for debug info
         };
     </script>
     
@@ -584,7 +604,9 @@
     <script src="js/vib34d-multi-instance.js?v=20250621182000"></script>
     <script src="js/vib34d-home-master.js?v=20250621182000"></script>
     <script src="js/vib34d-transition-engine.js?v=20250621182000"></script>
-    <script src="js/vib34d-style-system.js?v=20250621182000"></script>
+    <script src="js/vib34d-infinite-scroll.js?v=20250621190000"></script>
+    <script src="js/crystal-ui-framework.js?v=20250621190000"></script>
+    <script src="js/vib34d-style-system.js?v=20250621190000"></script>
     
     <!-- Cache Clearing Debug -->
     <script>
