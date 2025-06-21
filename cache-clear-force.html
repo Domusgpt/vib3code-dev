@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cache Clear Force - VIB34D Test</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+</head>
+<body>
+    <h1>CACHE CLEAR TEST</h1>
+    <p>VIB34D Style System Load Test</p>
+    <p>Time: <span id="time"></span></p>
+    
+    <!-- VIB34D Style System - Complete Multi-Visualizer Framework -->
+    <script src="js/vib34d-core.js?v=20250621180100"></script>
+    <script src="js/vib34d-multi-instance.js?v=20250621180100"></script>
+    <script src="js/vib34d-home-master.js?v=20250621180100"></script>
+    <script src="js/vib34d-transition-engine.js?v=20250621180100"></script>
+    <script src="js/vib34d-style-system.js?v=20250621180100"></script>
+    
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleTimeString();
+        console.log('🔥 FORCED CACHE CLEAR - VIB34D SYSTEM TEST');
+        console.log('🕒 Load Time:', new Date().toLocaleTimeString());
+        
+        // Test if VIB34D classes are available
+        setTimeout(() => {
+            console.log('🧪 VIB34DCore available:', typeof VIB34DCore !== 'undefined');
+            console.log('🧪 VIB34DMultiInstance available:', typeof VIB34DMultiInstance !== 'undefined');
+            console.log('🧪 VIB34DHomeMaster available:', typeof VIB34DHomeMaster !== 'undefined');
+            console.log('🧪 VIB34DTransitionEngine available:', typeof VIB34DTransitionEngine !== 'undefined');
+            console.log('🧪 VIB34DStyleSystem available:', typeof VIB34DStyleSystem !== 'undefined');
+        }, 1000);
+    </script>
+</body>
+</html>

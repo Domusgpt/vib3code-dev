@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear All Cache</title>
+    <style>
+        body {
+            background: #1a1a2e;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 50px;
+            text-align: center;
+        }
+        button {
+            font-size: 1.5rem;
+            padding: 20px 40px;
+            margin: 10px;
+            cursor: pointer;
+            background: #ff00ff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+        }
+        button:hover {
+            background: #ff00aa;
+        }
+        .log {
+            background: black;
+            padding: 20px;
+            margin: 20px auto;
+            width: 80%;
+            text-align: left;
+            border-radius: 10px;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧹 Cache Cleaner</h1>
+    <p>This page will help clear all cached data</p>
+    
+    <button onclick="clearEverything()">Clear All Cache & Reload</button>
+    <button onclick="unregisterServiceWorkers()">Remove Service Workers</button>
+    <button onclick="window.location.href='ppp-test-minimal.html'">Go to Minimal Test</button>
+    
+    <div class="log" id="log"></div>
+    
+    <script>
+        function log(msg) {
+            const logDiv = document.getElementById('log');
+            logDiv.innerHTML += `${new Date().toLocaleTimeString()} - ${msg}<br>`;
+            console.log(msg);
+        }
+        
+        function clearEverything() {
+            log('🧹 Starting complete cache clear...');
+            
+            // Clear local storage
+            try {
+                localStorage.clear();
+                log('✅ Local storage cleared');
+            } catch (e) {
+                log('❌ Failed to clear local storage: ' + e);
+            }
+            
+            // Clear session storage
+            try {
+                sessionStorage.clear();
+                log('✅ Session storage cleared');
+            } catch (e) {
+                log('❌ Failed to clear session storage: ' + e);
+            }
+            
+            // Clear cache storage
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => {
+                        caches.delete(name);
+                        log(`✅ Deleted cache: ${name}`);
+                    });
+                    if (names.length === 0) {
+                        log('ℹ️ No caches found');
+                    }
+                });
+            }
+            
+            // Force reload with cache bypass
+            setTimeout(() => {
+                log('🔄 Reloading with cache bypass...');
+                window.location.reload(true);
+            }, 2000);
+        }
+        
+        function unregisterServiceWorkers() {
+            log('🔧 Checking for service workers...');
+            
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    if (registrations.length === 0) {
+                        log('ℹ️ No service workers found');
+                        return;
+                    }
+                    
+                    registrations.forEach(registration => {
+                        registration.unregister().then(success => {
+                            if (success) {
+                                log(`✅ Unregistered service worker: ${registration.scope}`);
+                            } else {
+                                log(`❌ Failed to unregister: ${registration.scope}`);
+                            }
+                        });
+                    });
+                });
+            } else {
+                log('ℹ️ Service workers not supported');
+            }
+        }
+        
+        // Auto-check on load
+        log('🔍 Page loaded at ' + window.location.href);
+        unregisterServiceWorkers();
+    </script>
+</body>
+</html>
