@@ -46,8 +46,8 @@
         .content-layer {
             position: relative;
             z-index: 10;
-            background: rgba(26, 26, 46, 0.85);
-            backdrop-filter: blur(1px);
+            background: transparent;
+            /* Removed opaque background that was blocking visualizers */
         }
         
         /* Header Navigation */
@@ -150,7 +150,7 @@
         
         .hero-content {
             max-width: 900px;
-            background: rgba(26, 26, 46, 0.8);
+            background: rgba(26, 26, 46, 0.6);
             border-radius: 20px;
             padding: 4rem;
             backdrop-filter: blur(10px);
@@ -228,7 +228,7 @@
         
         /* Content Cards */
         .content-card {
-            background: rgba(26, 26, 46, 0.8);
+            background: rgba(26, 26, 46, 0.6);
             border-radius: 20px;
             padding: 3rem;
             backdrop-filter: blur(10px);
@@ -265,7 +265,7 @@
         }
         
         .feature-card {
-            background: rgba(26, 26, 46, 0.9);
+            background: rgba(26, 26, 46, 0.6);
             border-radius: 15px;
             padding: 2.5rem;
             text-align: center;
@@ -573,14 +573,15 @@
     <script>
         window.VIB34DConfig = {
             // ===== CORE VISUALIZER SETTINGS =====
-            visualizerCount: 4,  // CHANGE THIS NUMBER! (3-6 recommended)
-            visualizerRoles: ['background', 'content', 'accent', 'overlay'],
+            visualizerCount: 1,  // Canvas consolidation - ONE canvas per section
+            visualizerRoles: ['unified'],
             defaultGeometry: 'hypercube',
             defaultPreset: 'editorial',
+            enableCanvasConsolidation: true,  // Multi-geometry rendering
             
             // ===== INFINITE SCROLL SETTINGS =====
-            enableInfiniteScroll: true,
-            portalEffectsEnabled: true,
+            enableInfiniteScroll: false,  // Disabled to reduce complexity
+            portalEffectsEnabled: false,
             defaultTransitionRule: 'smooth',
             
             // ===== CRYSTAL UI SETTINGS =====
@@ -595,7 +596,8 @@
             // ===== EDITOR SETTINGS =====
             editorMode: false,    // Set to TRUE for editor controls
             showControls: false,  // Set to TRUE to show parameter controls
-            debugMode: false      // Set to TRUE for debug info
+            debugMode: true,      // Set to TRUE for debug info (TEMPORARY)
+            enableEditor: false   // Disable editor interfaces completely
         };
     </script>
     
@@ -604,7 +606,8 @@
     <script src="js/vib34d-multi-instance.js?v=20250621182000"></script>
     <script src="js/vib34d-home-master.js?v=20250621182000"></script>
     <script src="js/vib34d-transition-engine.js?v=20250621182000"></script>
-    <script src="js/vib34d-infinite-scroll.js?v=20250621190000"></script>
+    <!-- Infinite scroll disabled to reduce complexity
+    <script src="js/vib34d-infinite-scroll.js?v=20250621190000"></script> -->
     <script src="js/crystal-ui-framework.js?v=20250621190000"></script>
     <script src="js/vib34d-style-system.js?v=20250621190000"></script>
     

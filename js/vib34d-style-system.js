@@ -164,7 +164,7 @@ class VIB34DStyleSystem {
         
         this.multiInstanceManagers.set(sectionKey, multiInstanceManager);
         
-        console.log(`🎭 Created multi-instance manager for [${sectionKey}] with ${multiInstanceManager.instances.size} instances`);
+        console.log(`🎭 Created multi-instance manager for [${sectionKey}] with canvas consolidation`);
     }
     
     generateInstanceConfig(count) {
