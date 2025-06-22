@@ -432,6 +432,30 @@ class VIB34DCore {
         }
     }
     
+    setGeometryVariations(variations) {
+        this.geometryVariations = variations;
+        this.updateVariationUniforms();
+    }
+    
+    updateVariationUniforms() {
+        if (!this.uniforms.variations || !this.geometryVariations.length) return;
+        
+        // Pack variation data into flat array (max 3 variations)
+        const variationData = new Float32Array(12); // 3 variations × 4 params
+        
+        for (let i = 0; i < Math.min(3, this.geometryVariations.length); i++) {
+            const variation = this.geometryVariations[i];
+            if (variation.active) {
+                variationData[i * 4 + 0] = variation.modifier || 1.0;
+                variationData[i * 4 + 1] = variation.opacity || 0.5;
+                variationData[i * 4 + 2] = variation.modifier || 1.0; // Grid modifier
+                variationData[i * 4 + 3] = 1.0; // Blend mode placeholder
+            }
+        }
+        
+        this.gl.uniform1fv(this.uniforms.variations, variationData);
+    }
+    
     render() {
         if (!this.program || !this.isActive) return;
         
@@ -458,6 +482,11 @@ class VIB34DCore {
         this.gl.uniform3fv(this.uniforms.baseColor, new Float32Array(this.params.baseColor || [1.0, 0.0, 1.0]));
         this.gl.uniform1f(this.uniforms.interactionIntensity, this.interactionState.intensity);
         this.gl.uniform1f(this.uniforms.geometry, geometryMap[this.currentTheme] || 0);
+        
+        // Update variations if multi-geometry mode
+        if (this.multiGeometry && this.geometryVariations.length > 0) {
+            this.updateVariationUniforms();
+        }
         
         this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, 4);
         

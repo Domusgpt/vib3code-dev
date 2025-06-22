@@ -91,8 +91,8 @@ class VIB34DStyleSystem {
                 await this.setupGlobalInteractions();
             }
             
-            // Step 6: Initialize editor interfaces
-            if (this.options.enableEditor) {
+            // Step 6: Initialize editor interfaces (disabled for clean view)
+            if (this.options.enableEditor && this.options.editorMode) {
                 await this.initializeEditorInterfaces();
             }
             
@@ -191,13 +191,13 @@ class VIB34DStyleSystem {
     
     getRoleOpacity(role) {
         const opacityMap = {
-            background: 0.8,
-            content: 0.4,
-            accent: 0.6,
-            header: 0.5,
-            overlay: 0.3
+            background: 1.0,  // Increased for visibility
+            content: 0.8,     // Increased for visibility
+            accent: 0.9,      // Increased for visibility
+            header: 0.7,      // Increased for visibility
+            overlay: 0.6      // Increased for visibility
         };
-        return opacityMap[role] || 0.5;
+        return opacityMap[role] || 0.8;
     }
     
     getRoleModifier(role) {
@@ -491,8 +491,9 @@ class VIB34DStyleSystem {
             return;
         }
         
+        // Crystal UI now uses single global canvas to conserve contexts
         this.crystalUI = new CrystalUIFramework(this);
-        console.log('💎 Crystal UI Framework initialized');
+        console.log('💎 Crystal UI Framework initialized (single context)');
     }
     
     // ===== GLOBAL INTERACTION SETUP =====

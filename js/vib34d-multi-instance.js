@@ -17,33 +17,34 @@ class VIB34DMultiInstance {
         this.geometry = options.geometry || 'hypercube';
         this.baseParameters = options.baseParameters || {};
         
-        // Instance collection
-        this.instances = new Map();
-        this.activeInstances = new Set();
+        // CANVAS CONSOLIDATION: Single canvas, multiple geometry variations
+        this.canvas = null;
+        this.gl = null;
+        this.renderer = null;
+        
+        // Geometry variations to render on single canvas
+        this.geometryVariations = [];
         
         // Instance configuration templates
         this.instanceTemplates = {
-            // Standard 3-instance setup with flexible roles
-            'header': { 
-                modifier: 1.0, 
-                role: 'header',
-                zIndex: 1,
-                opacity: 0.6,
-                position: { top: '0%', left: '0%', width: '100%', height: '100%' }
-            },
-            'content': { 
-                modifier: 1.3, 
-                role: 'content',
-                zIndex: 2,
-                opacity: 0.4,
-                position: { top: '0%', left: '0%', width: '100%', height: '100%' }
-            },
+            // Standard 3-instance setup rendered as geometry variations
             'background': { 
                 modifier: 0.7, 
                 role: 'background',
-                zIndex: 0,
                 opacity: 0.8,
-                position: { top: '0%', left: '0%', width: '100%', height: '100%' }
+                blend: 'add'
+            },
+            'content': { 
+                modifier: 1.0, 
+                role: 'content',
+                opacity: 0.6,
+                blend: 'screen'
+            },
+            'accent': { 
+                modifier: 1.3, 
+                role: 'accent',
+                opacity: 0.4,
+                blend: 'add'
             }
         };
         
@@ -52,21 +53,23 @@ class VIB34DMultiInstance {
             this.instanceTemplates = { ...this.instanceTemplates, ...options.instanceConfig };
         }
         
-        this.setupInstanceContainers();
-        this.createInstances();
+        this.setupConsolidatedCanvas();
+        this.initializeRenderer();
+        this.createGeometryVariations();
         
-        console.log(`🎭 MultiInstance [${this.sectionKey}] created with ${this.instances.size} instances`);
+        console.log(`🎭 MultiInstance [${this.sectionKey}] created with ${this.geometryVariations.length} variations on 1 canvas`);
     }
     
-    setupInstanceContainers() {
-        // Ensure section has relative positioning for instance layering
+    setupConsolidatedCanvas() {
+        // Ensure section has relative positioning
         this.sectionElement.style.position = 'relative';
         this.sectionElement.style.overflow = 'hidden';
         
-        // Create instance container for all visualizers
-        this.instanceContainer = document.createElement('div');
-        this.instanceContainer.className = `vib34d-instances vib34d-${this.sectionKey}`;
-        this.instanceContainer.style.cssText = `
+        // Create SINGLE canvas for all geometry variations
+        this.canvas = document.createElement('canvas');
+        this.canvas.className = `vib34d-canvas vib34d-${this.sectionKey}`;
+        this.canvas.id = `vib34d-canvas-${this.sectionKey}`;
+        this.canvas.style.cssText = `
             position: absolute;
             top: 0;
             left: 0;
@@ -76,64 +79,66 @@ class VIB34DMultiInstance {
             z-index: 1;
         `;
         
-        // Insert at beginning so content layers above visualizers
-        this.sectionElement.insertBefore(this.instanceContainer, this.sectionElement.firstChild);
+        // Size canvas
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
         
-        console.log(`📦 Instance container created for ${this.sectionKey}`);
+        // Insert at beginning
+        this.sectionElement.insertBefore(this.canvas, this.sectionElement.firstChild);
+        
+        console.log(`📦 Consolidated canvas created for ${this.sectionKey}`);
     }
     
-    createInstances() {
-        Object.entries(this.instanceTemplates).forEach(([instanceKey, config]) => {
-            this.createInstance(instanceKey, config);
+    initializeRenderer() {
+        // Create single VIB34D renderer for consolidated canvas
+        this.renderer = new VIB34DCore(this.canvas, {
+            instanceId: `${this.sectionKey}-consolidated`,
+            geometry: this.geometry,
+            multiGeometry: true // Enable multi-geometry rendering
         });
+        
+        this.gl = this.renderer.gl;
+        console.log(`🎨 Initialized consolidated renderer for ${this.sectionKey}`);
     }
     
-    createInstance(instanceKey, config) {
-        // Create canvas for this instance
-        const canvas = document.createElement('canvas');
-        canvas.className = `vib34d-instance vib34d-${instanceKey}`;
-        canvas.id = `vib34d-${this.sectionKey}-${instanceKey}`;
-        
-        // Apply instance positioning and styling
-        canvas.style.cssText = `
-            position: absolute;
-            top: ${config.position.top};
-            left: ${config.position.left};
-            width: ${config.position.width};
-            height: ${config.position.height};
-            z-index: ${config.zIndex};
-            opacity: ${config.opacity};
-            pointer-events: none;
-            mix-blend-mode: screen;
-        `;
-        
-        // Size canvas to container
-        const rect = this.instanceContainer.getBoundingClientRect();
-        canvas.width = rect.width || 800;
-        canvas.height = rect.height || 600;
-        
-        this.instanceContainer.appendChild(canvas);
-        
-        // Create VIB34D Core instance
-        const visualizer = new VIB34DCore(canvas, {
-            instanceId: `${this.sectionKey}-${instanceKey}`,
-            role: config.role,
-            modifier: config.modifier,
-            geometry: this.geometry
+    createGeometryVariations() {
+        // Convert instance templates to geometry variations
+        Object.entries(this.instanceTemplates).forEach(([variantKey, config]) => {
+            this.geometryVariations.push({
+                key: variantKey,
+                modifier: config.modifier,
+                role: config.role,
+                opacity: config.opacity,
+                blend: config.blend,
+                active: true
+            });
         });
         
-        // Store instance data
-        const instanceData = {
-            key: instanceKey,
-            config: config,
-            canvas: canvas,
-            visualizer: visualizer,
-            isActive: false
+        // Pass variations to renderer
+        if (this.renderer && this.renderer.setGeometryVariations) {
+            this.renderer.setGeometryVariations(this.geometryVariations);
+        }
+    }
+    
+    addGeometryVariation(variantKey, config) {
+        // Add new geometry variation to existing canvas
+        const variation = {
+            key: variantKey,
+            modifier: config.modifier || 1.0,
+            role: config.role || 'custom',
+            opacity: config.opacity || 0.5,
+            blend: config.blend || 'add',
+            active: true
         };
         
-        this.instances.set(instanceKey, instanceData);
+        this.geometryVariations.push(variation);
         
-        console.log(`🎨 Created instance [${instanceKey}] for ${this.sectionKey} with modifier: ${config.modifier}`);
+        // Update renderer with new variations
+        if (this.renderer && this.renderer.setGeometryVariations) {
+            this.renderer.setGeometryVariations(this.geometryVariations);
+        }
+        
+        console.log(`➕ Added geometry variation [${variantKey}] to ${this.sectionKey}`);
     }
     
     addInstance(instanceKey, config) {
@@ -157,59 +162,40 @@ class VIB34DMultiInstance {
     }
     
     updateInstanceParameters(derivedParameters) {
-        // Update all instances with new base parameters from home-master
+        // Update consolidated renderer with new parameters
         this.baseParameters = derivedParameters;
         
-        this.instances.forEach((instance, instanceKey) => {
-            if (instance.visualizer && instance.visualizer.updateTheme) {
-                // Pass derived parameters to each instance
-                instance.visualizer.updateTheme(this.geometry, derivedParameters);
-            }
-        });
+        if (this.renderer && this.renderer.updateTheme) {
+            this.renderer.updateTheme(this.geometry, derivedParameters);
+        }
         
-        console.log(`📊 Updated parameters for ${this.instances.size} instances in ${this.sectionKey}`);
+        console.log(`📊 Updated parameters for consolidated renderer in ${this.sectionKey}`);
     }
     
     updateInteractionState(interactionData) {
-        // Propagate interaction to all active instances
-        this.activeInstances.forEach(instanceKey => {
-            const instance = this.instances.get(instanceKey);
-            if (instance && instance.visualizer && instance.visualizer.updateInteractionState) {
-                // Apply instance-specific interaction modifications
-                const modifiedInteraction = {
-                    ...interactionData,
-                    intensity: (interactionData.intensity || 0) * instance.config.modifier
-                };
-                
-                instance.visualizer.updateInteractionState(modifiedInteraction);
-            }
-        });
+        // Send interaction data to consolidated renderer
+        if (this.renderer && this.renderer.updateInteractionState) {
+            // Renderer will apply variations internally
+            this.renderer.updateInteractionState(interactionData);
+        }
     }
     
     activateInstances() {
-        // Start all instances (viewport entered)
-        this.instances.forEach((instance, instanceKey) => {
-            if (instance.visualizer) {
-                instance.visualizer.start();
-                instance.isActive = true;
-                this.activeInstances.add(instanceKey);
-            }
-        });
-        
-        console.log(`🎬 Activated ${this.activeInstances.size} instances in ${this.sectionKey}`);
+        // Start consolidated renderer
+        if (this.renderer) {
+            this.renderer.start();
+            this.isActive = true;
+            console.log(`🎬 Activated consolidated renderer in ${this.sectionKey}`);
+        }
     }
     
     pauseInstances() {
-        // Pause all instances (viewport left)
-        this.instances.forEach((instance, instanceKey) => {
-            if (instance.visualizer) {
-                instance.visualizer.pause();
-                instance.isActive = false;
-            }
-        });
-        
-        this.activeInstances.clear();
-        console.log(`⏸️ Paused instances in ${this.sectionKey}`);
+        // Pause consolidated renderer
+        if (this.renderer) {
+            this.renderer.pause();
+            this.isActive = false;
+            console.log(`⏸️ Paused consolidated renderer in ${this.sectionKey}`);
+        }
     }
     
     activateInstance(instanceKey) {
@@ -258,27 +244,22 @@ class VIB34DMultiInstance {
     }
     
     resizeInstances() {
-        // Resize all canvases when container changes
-        const rect = this.instanceContainer.getBoundingClientRect();
-        
-        this.instances.forEach((instance) => {
-            instance.canvas.width = rect.width || 800;
-            instance.canvas.height = rect.height || 600;
+        // Resize single canvas
+        if (this.canvas) {
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
             
-            if (instance.visualizer && instance.visualizer.resize) {
-                instance.visualizer.resize();
+            if (this.renderer && this.renderer.resize) {
+                this.renderer.resize();
             }
-        });
+        }
     }
     
     render() {
-        // Render all active instances
-        this.activeInstances.forEach(instanceKey => {
-            const instance = this.instances.get(instanceKey);
-            if (instance && instance.visualizer && instance.visualizer.render) {
-                instance.visualizer.render();
-            }
-        });
+        // Render consolidated canvas with all variations
+        if (this.renderer && this.renderer.render && this.isActive) {
+            this.renderer.render();
+        }
     }
     
     getInstanceData() {
@@ -303,17 +284,18 @@ class VIB34DMultiInstance {
     }
     
     destroy() {
-        // Clean up all instances
-        this.instances.forEach((instance) => {
-            instance.visualizer.destroy();
-            instance.canvas.remove();
-        });
+        // Clean up consolidated renderer and canvas
+        if (this.renderer) {
+            this.renderer.destroy();
+        }
         
-        this.instanceContainer.remove();
-        this.instances.clear();
-        this.activeInstances.clear();
+        if (this.canvas) {
+            this.canvas.remove();
+        }
         
-        console.log(`🗑️ Destroyed MultiInstance [${this.sectionKey}]`);
+        this.geometryVariations = [];
+        
+        console.log(`🗑️ Destroyed consolidated MultiInstance [${this.sectionKey}]`);
     }
 }
 
