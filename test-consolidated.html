@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIB34D Canvas Consolidation Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .section {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 10;
+            background: rgba(0,0,0,0.5);
+            padding: 2rem;
+            border-radius: 10px;
+        }
+        
+        #context-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #0ff;
+            font-family: monospace;
+            z-index: 1000;
+        }
+        
+        .counter-row {
+            margin: 5px 0;
+        }
+        
+        .success { color: #0f0; }
+        .warning { color: #ff0; }
+        .error { color: #f00; }
+    </style>
+</head>
+<body>
+    <!-- WebGL Context Counter -->
+    <div id="context-counter">
+        <h3>WebGL Context Monitor</h3>
+        <div class="counter-row">Total Canvases: <span id="canvas-count">0</span></div>
+        <div class="counter-row">WebGL Contexts: <span id="context-count">0</span></div>
+        <div class="counter-row">Status: <span id="status" class="success">OK</span></div>
+        <div class="counter-row">Target: 5 sections × 1 canvas = 5 contexts</div>
+    </div>
+
+    <!-- Test Sections -->
+    <section class="section" data-section="home" data-geometry="hypercube">
+        <div class="content">
+            <h1>Home Section</h1>
+            <p>Hypercube Geometry - Single Canvas</p>
+        </div>
+    </section>
+
+    <section class="section" data-section="articles" data-geometry="tetrahedron">
+        <div class="content">
+            <h1>Articles Section</h1>
+            <p>Tetrahedron Geometry - Single Canvas</p>
+        </div>
+    </section>
+
+    <section class="section" data-section="videos" data-geometry="sphere">
+        <div class="content">
+            <h1>Videos Section</h1>
+            <p>Sphere Geometry - Single Canvas</p>
+        </div>
+    </section>
+
+    <section class="section" data-section="podcasts" data-geometry="torus">
+        <div class="content">
+            <h1>Podcasts Section</h1>
+            <p>Torus Geometry - Single Canvas</p>
+        </div>
+    </section>
+
+    <section class="section" data-section="ema" data-geometry="wave">
+        <div class="content">
+            <h1>EMA Section</h1>
+            <p>Wave Geometry - Single Canvas</p>
+        </div>
+    </section>
+
+    <!-- Configure for canvas consolidation -->
+    <script>
+        window.VIB34DConfig = {
+            visualizerCount: 1,  // ONE canvas per section
+            visualizerRoles: ['unified'],
+            defaultGeometry: 'hypercube',
+            defaultPreset: 'editorial',
+            enableCanvasConsolidation: true,
+            enableInfiniteScroll: false,
+            enableCrystalUI: true,
+            targetFPS: 60,
+            enableViewportOptimization: true,
+            editorMode: false,
+            debugMode: true
+        };
+        
+        // Monitor WebGL contexts
+        function updateContextCounter() {
+            const canvases = document.querySelectorAll('canvas');
+            const contexts = Array.from(canvases).filter(canvas => {
+                return canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            });
+            
+            document.getElementById('canvas-count').textContent = canvases.length;
+            document.getElementById('context-count').textContent = contexts.length;
+            
+            const status = document.getElementById('status');
+            if (contexts.length <= 6) {
+                status.textContent = 'OK - Within limits';
+                status.className = 'success';
+            } else if (contexts.length <= 16) {
+                status.textContent = 'WARNING - Approaching limit';
+                status.className = 'warning';
+            } else {
+                status.textContent = 'ERROR - Too many contexts!';
+                status.className = 'error';
+            }
+        }
+        
+        // Update counter every second
+        setInterval(updateContextCounter, 1000);
+        
+        // Log WebGL warnings
+        const originalGetContext = HTMLCanvasElement.prototype.getContext;
+        HTMLCanvasElement.prototype.getContext = function(type, ...args) {
+            if (type === 'webgl' || type === 'experimental-webgl') {
+                console.log('📊 WebGL context created for:', this.id || 'unnamed canvas');
+            }
+            return originalGetContext.call(this, type, ...args);
+        };
+    </script>
+
+    <!-- VIB34D Scripts -->
+    <script src="js/vib34d-core.js"></script>
+    <script src="js/vib34d-multi-instance.js"></script>
+    <script src="js/vib34d-home-master.js"></script>
+    <script src="js/vib34d-transition-engine.js"></script>
+    <script src="js/crystal-ui-framework.js"></script>
+    <script src="js/vib34d-style-system.js"></script>
+</body>
+</html>

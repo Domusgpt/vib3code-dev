@@ -37,14 +37,18 @@ class VIB34DStyleSystem {
         this.transitionEditor = null;
         this.homeMasterPanel = null;
         
+        // New systems
+        this.infiniteScroll = null;
+        this.crystalUI = null;
+        
         // Section management
         this.sections = new Map();
         this.currentSection = 'home';
         this.activeObserver = null;
         
-        // GLOBAL VISUALIZER POOL (not per-section!)
-        this.globalVisualizers = [];
-        this.visualizerContainer = null;
+        // PER-SECTION MULTI-INSTANCE MANAGERS
+        this.multiInstanceManagers = new Map();
+        this.sectionObserver = null;
         
         // Global interaction state
         this.globalInteractionState = {
@@ -64,134 +68,136 @@ class VIB34DStyleSystem {
         console.log('🚀 Initializing VIB34D Style System...');
         
         try {
-            // Step 1: Create global visualizer container
-            await this.createGlobalVisualizerContainer();
-            
-            // Step 2: Create global visualizer pool
-            await this.createGlobalVisualizerPool();
-            
-            // Step 3: Initialize Home-Master controller
+            // Step 1: Initialize Home-Master controller
             if (this.options.enableHomeMaster) {
                 await this.initializeHomeMaster();
             }
             
-            // Step 4: Detect sections (but don't create visualizers per section!)
+            // Step 2: Detect sections and create multi-instance managers
             if (this.options.autoDetectSections) {
                 await this.detectSections();
             }
             
-            // Step 5: Initialize transition system
+            // Step 3: Create multi-instance visualizers per section
+            await this.createSectionMultiInstances();
+            
+            // Step 4: Initialize transition system
             if (this.options.enableTransitions) {
                 await this.initializeTransitionSystem();
             }
             
-            // Step 6: Setup global interactions
+            // Step 5: Setup global interactions
             if (this.options.enableInteractions) {
                 await this.setupGlobalInteractions();
             }
             
-            // Step 7: Initialize editor interfaces
-            if (this.options.enableEditor) {
+            // Step 6: Initialize editor interfaces (disabled for clean view)
+            if (this.options.enableEditor && this.options.editorMode) {
                 await this.initializeEditorInterfaces();
             }
             
-            // Step 8: Setup section navigation
+            // Step 7: Setup section navigation and viewport detection
             await this.setupSectionNavigation();
             
-            // Step 9: Start visualizers and render loop
-            this.startGlobalVisualizers();
+            // Step 8: Initialize infinite scroll system
+            await this.initializeInfiniteScroll();
+            
+            // Step 9: Initialize Crystal UI Framework
+            await this.initializeCrystalUI();
+            
+            // Step 10: Start render loop
             this.startRenderLoop();
             
-            // Step 10: Load default preset and set initial section
+            // Step 11: Load default preset and activate visible sections
             if (this.options.defaultPreset && this.homeMaster) {
                 this.homeMaster.loadPreset(this.options.defaultPreset);
             }
-            await this.transitionToSection('home');
+            await this.activateVisibleSections();
             
-            console.log(`✅ VIB34D Style System initialized with ${this.globalVisualizers.length} global visualizers`);
+            console.log(`✅ VIB34D Style System initialized with ${this.multiInstanceManagers.size} section managers`);
             
         } catch (error) {
             console.error('🚨 VIB34D Style System initialization failed:', error);
         }
     }
     
-    // ===== GLOBAL VISUALIZER POOL CREATION =====
-    async createGlobalVisualizerContainer() {
-        // Create single container for all visualizers
-        this.visualizerContainer = document.createElement('div');
-        this.visualizerContainer.className = 'vib34d-global-container';
-        this.visualizerContainer.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        `;
+    // ===== SECTION MULTI-INSTANCE CREATION =====
+    async createSectionMultiInstances() {
+        // Create multi-instance managers for each detected section
+        for (let [sectionKey, sectionData] of this.sections) {
+            await this.createMultiInstanceForSection(sectionKey, sectionData);
+        }
         
-        document.body.insertBefore(this.visualizerContainer, document.body.firstChild);
-        console.log('📦 Global visualizer container created');
+        console.log(`📦 Created multi-instance managers for ${this.multiInstanceManagers.size} sections`);
     }
     
-    async createGlobalVisualizerPool() {
-        const { visualizerCount, visualizerRoles, defaultGeometry } = this.options;
-        
-        for (let i = 0; i < visualizerCount; i++) {
-            const role = visualizerRoles[i] || `visualizer-${i}`;
-            
-            // Create canvas
-            const canvas = document.createElement('canvas');
-            canvas.className = `vib34d-global vib34d-${role}`;
-            canvas.id = `vib34d-global-${i}`;
-            
-            // Position canvas
-            canvas.style.cssText = `
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: ${i};
-                opacity: ${this.getRoleOpacity(role)};
-                pointer-events: none;
-                mix-blend-mode: screen;
-            `;
-            
-            // Size canvas
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            
-            this.visualizerContainer.appendChild(canvas);
-            
-            // Create VIB34D Core instance
-            const visualizer = new VIB34DCore(canvas, {
-                instanceId: `global-${role}`,
-                role: role,
-                modifier: this.getRoleModifier(role),
-                geometry: defaultGeometry
-            });
-            
-            this.globalVisualizers.push({
-                canvas: canvas,
-                visualizer: visualizer,
-                role: role,
-                isActive: false
-            });
-            
-            console.log(`🎨 Created global visualizer [${role}] with modifier: ${this.getRoleModifier(role)}`);
+    async createMultiInstanceForSection(sectionKey, sectionData) {
+        if (typeof VIB34DMultiInstance === 'undefined') {
+            console.error('🚨 VIB34DMultiInstance not loaded');
+            return;
         }
+        
+        const { config } = sectionData;
+        
+        // Get instance configuration - use configured count or default to standard preset
+        const presetName = config.instancePreset || 'standard';
+        const instanceConfig = VIB34DInstancePresets ? 
+            VIB34DInstancePresets.getPreset(presetName) : null;
+        
+        // Apply visualizer count override if specified
+        if (this.options.visualizerCount && this.options.visualizerCount !== 3) {
+            // Dynamically create instance config based on specified count
+            const dynamicConfig = this.generateInstanceConfig(this.options.visualizerCount);
+            Object.assign(instanceConfig || {}, dynamicConfig);
+        }
+        
+        // Create multi-instance manager for this section
+        const multiInstanceManager = new VIB34DMultiInstance(
+            sectionData.element,
+            sectionKey,
+            {
+                geometry: config.geometry,
+                baseParameters: config.baseParameters,
+                instanceConfig: instanceConfig
+            }
+        );
+        
+        this.multiInstanceManagers.set(sectionKey, multiInstanceManager);
+        
+        console.log(`🎭 Created multi-instance manager for [${sectionKey}] with canvas consolidation`);
+    }
+    
+    generateInstanceConfig(count) {
+        // Generate dynamic instance configuration based on count
+        const roles = this.options.visualizerRoles || ['background', 'content', 'accent', 'overlay', 'detail', 'atmosphere'];
+        const config = {};
+        
+        for (let i = 0; i < count; i++) {
+            const role = roles[i] || `instance-${i}`;
+            const modifier = this.getRoleModifier(role);
+            const opacity = this.getRoleOpacity(role);
+            
+            config[role] = {
+                modifier: modifier,
+                role: role,
+                zIndex: i,
+                opacity: opacity,
+                position: { top: '0%', left: '0%', width: '100%', height: '100%' }
+            };
+        }
+        
+        return config;
     }
     
     getRoleOpacity(role) {
         const opacityMap = {
-            background: 0.8,
-            content: 0.4,
-            accent: 0.6,
-            header: 0.5,
-            overlay: 0.3
+            background: 1.0,  // Increased for visibility
+            content: 0.8,     // Increased for visibility
+            accent: 0.9,      // Increased for visibility
+            header: 0.7,      // Increased for visibility
+            overlay: 0.6      // Increased for visibility
         };
-        return opacityMap[role] || 0.5;
+        return opacityMap[role] || 0.8;
     }
     
     getRoleModifier(role) {
@@ -239,7 +245,7 @@ class VIB34DStyleSystem {
             });
         });
         
-        // Store section data (NO visualizer creation!)
+        // Store section data for multi-instance creation
         for (let i = 0; i < detectedSections.length; i++) {
             const section = detectedSections[i];
             const sectionConfig = this.determineSectionConfig(section, i);
@@ -254,7 +260,7 @@ class VIB34DStyleSystem {
             console.log(`📍 Detected section [${sectionConfig.key}] with geometry: ${sectionConfig.geometry}`);
         }
         
-        console.log(`📍 Detected ${detectedSections.length} sections (no visualizers created per section)`);
+        console.log(`📍 Detected ${detectedSections.length} sections - ready for multi-instance creation`);
     }
     
     // ===== SECTION TRANSITION SYSTEM =====
@@ -271,48 +277,46 @@ class VIB34DStyleSystem {
         
         console.log(`🔄 Transitioning from [${previousSection}] to [${sectionKey}] (${targetGeometry})`);
         
-        // Transition all global visualizers to new geometry
-        await this.transitionGlobalVisualizers(targetGeometry);
-        
         // Update home-master parameters for this section
         if (this.homeMaster) {
             const sectionParams = this.homeMaster.deriveParametersForSection(sectionKey);
-            this.updateGlobalVisualizerParameters(sectionParams);
+            this.updateSectionParameters(sectionKey, sectionParams);
         }
         
         console.log(`✅ Section transition complete: [${sectionKey}]`);
     }
     
-    async transitionGlobalVisualizers(targetGeometry) {
-        // Transition all global visualizers to the new geometry
-        this.globalVisualizers.forEach((viz, index) => {
-            if (viz.visualizer && viz.visualizer.updateTheme) {
-                viz.visualizer.updateTheme(targetGeometry);
-                console.log(`🎨 Global visualizer [${viz.role}] transitioned to ${targetGeometry}`);
-            }
-        });
+    updateSectionParameters(sectionKey, parameters) {
+        // Update specific section's multi-instance manager
+        const multiInstanceManager = this.multiInstanceManagers.get(sectionKey);
+        if (multiInstanceManager) {
+            multiInstanceManager.updateInstanceParameters(parameters);
+        }
     }
     
-    updateGlobalVisualizerParameters(parameters) {
-        // Update all global visualizers with new parameters
-        this.globalVisualizers.forEach((viz) => {
-            if (viz.visualizer && viz.visualizer.updateTheme) {
-                viz.visualizer.updateTheme(viz.visualizer.currentTheme, parameters);
+    updateAllSectionParameters(parameters) {
+        // Update all section multi-instance managers with derived parameters
+        this.multiInstanceManagers.forEach((manager, sectionKey) => {
+            if (this.homeMaster) {
+                const derivedParams = this.homeMaster.deriveParametersForSection(sectionKey);
+                manager.updateInstanceParameters(derivedParams);
             }
         });
         
-        console.log(`📊 Updated ${this.globalVisualizers.length} global visualizers with new parameters`);
+        console.log(`📊 Updated parameters for ${this.multiInstanceManagers.size} section managers`);
     }
     
     // ===== SECTION NAVIGATION SETUP =====
     async setupSectionNavigation() {
-        // Setup scroll-based section detection
+        // Setup viewport-aware section activation
         if (!window.IntersectionObserver) {
-            console.warn('⚠️ IntersectionObserver not supported');
+            console.warn('⚠️ IntersectionObserver not supported - activating all sections');
+            this.activateAllSections();
             return;
         }
         
-        this.sectionObserver = new IntersectionObserver((entries) => {
+        // Transition observer for current section tracking
+        this.transitionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const sectionKey = this.findSectionKeyByElement(entry.target);
@@ -326,12 +330,58 @@ class VIB34DStyleSystem {
             threshold: 0.5 // Trigger when 50% of section is visible
         });
         
-        // Observe all sections
-        this.sections.forEach((sectionData) => {
-            this.sectionObserver.observe(sectionData.element);
+        // Viewport observer for performance optimization
+        this.viewportObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const sectionKey = this.findSectionKeyByElement(entry.target);
+                const sectionData = this.sections.get(sectionKey);
+                const multiInstanceManager = this.multiInstanceManagers.get(sectionKey);
+                
+                if (entry.isIntersecting) {
+                    // Section entered viewport - activate visualizers
+                    if (sectionData && multiInstanceManager) {
+                        sectionData.isVisible = true;
+                        multiInstanceManager.activateInstances();
+                        console.log(`👁️ Section [${sectionKey}] entered viewport - activated`);
+                    }
+                } else {
+                    // Section left viewport - pause visualizers for performance
+                    if (sectionData && multiInstanceManager) {
+                        sectionData.isVisible = false;
+                        multiInstanceManager.pauseInstances();
+                        console.log(`👁️ Section [${sectionKey}] left viewport - paused`);
+                    }
+                }
+            });
+        }, {
+            rootMargin: '100px', // Start loading 100px before entering viewport
+            threshold: 0.1 // Trigger when 10% visible
         });
         
-        console.log('👀 Section navigation observer setup complete');
+        // Observe all sections with both observers
+        this.sections.forEach((sectionData) => {
+            this.transitionObserver.observe(sectionData.element);
+            this.viewportObserver.observe(sectionData.element);
+        });
+        
+        console.log('👀 Section navigation and viewport observers setup complete');
+    }
+    
+    async activateVisibleSections() {
+        // Initially activate sections that are in viewport
+        this.sections.forEach((sectionData, sectionKey) => {
+            const rect = sectionData.element.getBoundingClientRect();
+            const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+            
+            if (isVisible) {
+                sectionData.isVisible = true;
+                const multiInstanceManager = this.multiInstanceManagers.get(sectionKey);
+                if (multiInstanceManager) {
+                    multiInstanceManager.activateInstances();
+                    console.log(`🎬 Initially activated section [${sectionKey}]`);
+                }
+            }
+        });
     }
     
     determineSectionConfig(element, index) {
@@ -385,25 +435,31 @@ class VIB34DStyleSystem {
         };
     }
     
-    // ===== GLOBAL VISUALIZER ACTIVATION =====
-    startGlobalVisualizers() {
-        this.globalVisualizers.forEach((viz) => {
-            if (viz.visualizer) {
-                viz.visualizer.start();
-                viz.isActive = true;
+    // ===== SECTION ACTIVATION MANAGEMENT =====
+    activateAllSections() {
+        // Fallback: activate all sections when IntersectionObserver not available
+        this.sections.forEach((sectionData, sectionKey) => {
+            sectionData.isVisible = true;
+            sectionData.isActive = true;
+            
+            const multiInstanceManager = this.multiInstanceManagers.get(sectionKey);
+            if (multiInstanceManager) {
+                multiInstanceManager.activateInstances();
             }
         });
-        console.log(`🎬 Started ${this.globalVisualizers.length} global visualizers`);
+        console.log('🎬 All sections activated (fallback mode)');
     }
     
-    pauseGlobalVisualizers() {
-        this.globalVisualizers.forEach((viz) => {
-            if (viz.visualizer) {
-                viz.visualizer.pause();
-                viz.isActive = false;
+    pauseAllSections() {
+        this.multiInstanceManagers.forEach((manager, sectionKey) => {
+            manager.pauseInstances();
+            const sectionData = this.sections.get(sectionKey);
+            if (sectionData) {
+                sectionData.isVisible = false;
+                sectionData.isActive = false;
             }
         });
-        console.log(`⏸️ Paused ${this.globalVisualizers.length} global visualizers`);
+        console.log(`⏸️ Paused all ${this.multiInstanceManagers.size} section managers`);
     }
     
     // ===== TRANSITION SYSTEM INITIALIZATION =====
@@ -415,6 +471,29 @@ class VIB34DStyleSystem {
         
         this.transitionManager = new VIB34DTransitionManager();
         console.log('🎬 Transition system initialized for global visualizers');
+    }
+    
+    // ===== INFINITE SCROLL INITIALIZATION =====
+    async initializeInfiniteScroll() {
+        if (typeof VIB34DInfiniteScroll === 'undefined') {
+            console.warn('⚠️ VIB34DInfiniteScroll not loaded - skipping infinite scroll');
+            return;
+        }
+        
+        this.infiniteScroll = new VIB34DInfiniteScroll(this);
+        console.log('🌊 Infinite scroll system initialized');
+    }
+    
+    // ===== CRYSTAL UI INITIALIZATION =====
+    async initializeCrystalUI() {
+        if (typeof CrystalUIFramework === 'undefined') {
+            console.warn('⚠️ CrystalUIFramework not loaded - skipping crystal UI');
+            return;
+        }
+        
+        // Crystal UI now uses single global canvas to conserve contexts
+        this.crystalUI = new CrystalUIFramework(this);
+        console.log('💎 Crystal UI Framework initialized (single context)');
     }
     
     // ===== GLOBAL INTERACTION SETUP =====
@@ -528,10 +607,11 @@ class VIB34DStyleSystem {
             this.homeMaster.updateMasterInteraction(interactionData);
         }
         
-        // Send directly to all global visualizers
-        this.globalVisualizers.forEach((viz) => {
-            if (viz.isActive && viz.visualizer && viz.visualizer.updateInteractionState) {
-                viz.visualizer.updateInteractionState(interactionData);
+        // Send to all active multi-instance managers
+        this.multiInstanceManagers.forEach((manager, sectionKey) => {
+            const sectionData = this.sections.get(sectionKey);
+            if (sectionData && sectionData.isVisible) {
+                manager.updateInteractionState(interactionData);
             }
         });
     }
@@ -560,10 +640,11 @@ class VIB34DStyleSystem {
         const render = () => {
             if (!this.renderLoopActive) return;
             
-            // Render all active global visualizers
-            this.globalVisualizers.forEach((viz) => {
-                if (viz.isActive && viz.visualizer && viz.visualizer.render) {
-                    viz.visualizer.render();
+            // Render all visible multi-instance managers
+            this.multiInstanceManagers.forEach((manager, sectionKey) => {
+                const sectionData = this.sections.get(sectionKey);
+                if (sectionData && sectionData.isVisible && manager.render) {
+                    manager.render();
                 }
             });
             
@@ -571,7 +652,7 @@ class VIB34DStyleSystem {
         };
         
         render();
-        console.log('🎬 Global render loop started');
+        console.log('🎬 Multi-instance render loop started');
     }
     
     stopRenderLoop() {
@@ -666,15 +747,32 @@ class VIB34DStyleSystem {
     
     // Cleanup
     destroy() {
-        // Cleanup viewport observer
-        if (this.activeObserver) {
-            this.activeObserver.disconnect();
+        // Cleanup observers
+        if (this.transitionObserver) {
+            this.transitionObserver.disconnect();
+        }
+        if (this.viewportObserver) {
+            this.viewportObserver.disconnect();
+        }
+        
+        // Stop render loop
+        this.stopRenderLoop();
+        
+        // Destroy infinite scroll system
+        if (this.infiniteScroll) {
+            this.infiniteScroll.destroy();
+        }
+        
+        // Destroy crystal UI framework
+        if (this.crystalUI) {
+            this.crystalUI.destroy();
         }
         
         // Destroy all multi-instance managers
         this.multiInstanceManagers.forEach((manager) => {
             manager.destroy();
         });
+        this.multiInstanceManagers.clear();
         
         // Remove editor interfaces
         if (this.transitionEditor && this.transitionEditor.editorPanel) {
