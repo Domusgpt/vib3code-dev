@@ -1,28 +1,26 @@
 {
   "hosting": {
-    "public": ".",
+    "public": "apps/vib34d-demo/dist",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**",
-      "**/*.py",
-      "**/*.bat",
-      "**/*.sh",
-      "**/*.exe",
-      "**/CLAUDE.md",
-      "**/README.md",
-      "**/*.log",
-      "**/content_pipeline/**",
-      "**/router_test_package/**",
-      "**/vib3code-enhanced-clean/**",
-      "**/*.backup",
-      "**/vib3code-expanded-magazine.html",
-      "**/vib3code-vibrant-home-master.html"
+      "**/node_modules/**"
     ],
     "rewrites": [
       {
         "source": "**",
         "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=31536000"
+          }
+        ]
       }
     ]
   }

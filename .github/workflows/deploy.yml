@@ -21,27 +21,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.4
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build VIB34D monorepo
+        run: pnpm run build
+
+      - name: List build output
+        run: |
+          echo "🔍 Built demo app:"
+          ls -la apps/vib34d-demo/dist/
+          echo "🔍 Built editor app:"
+          ls -la apps/editor/dist/
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: List files before upload
-        run: |
-          echo "🔍 Files in js/ directory:"
-          ls -la js/ | grep -E "(hyperav|vib3)"
-          echo "🔍 Total files to upload:"
-          find . -type f | wc -l
-          echo "🔍 Index.html size:"
-          wc -c index.html
-      
-      - name: Clean up broken symlinks
-        run: |
-          echo "🧹 Removing any broken symlinks..."
-          find . -type l ! -exec test -e {} \; -delete || true
-          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "apps/vib34d-demo/dist"
 
   deploy:
     environment:
