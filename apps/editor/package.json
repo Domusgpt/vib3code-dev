@@ -1,0 +1,15 @@
+{
+  "name": "vib34d-editor",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vib34d/core": "workspace:*",
+    "@vib34d/editor": "workspace:*",
+    "@vib34d/home-master": "workspace:*"
+  }
+}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VIB34D Demo</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Inter", system-ui, sans-serif;
+        background: radial-gradient(120% 120% at 50% 0%, #02030a 0%, #04021c 45%, #03010c 100%);
+        color: #f4fbff;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .vib34d-demo {
+        display: flex;
+        flex-direction: column;
+        gap: 18vh;
+        padding: 10vh 7vw 20vh;
+      }
+
+      .crystal-nav {
+        position: sticky;
+        top: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-end;
+        margin: 24px 7vw 0;
+        z-index: 20;
+      }
+
+      .crystal-nav__tray {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .crystal-button {
+        position: relative;
+        padding: 12px 20px;
+        border-radius: 18px;
+        border: 1px solid rgba(142, 255, 255, 0.28);
+        background: linear-gradient(135deg, rgba(15, 71, 113, 0.45), rgba(12, 26, 61, 0.9));
+        color: #dff8ff;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        letter-spacing: 0.22em;
+        cursor: pointer;
+        transition: transform 220ms ease, box-shadow 260ms ease, border-color 260ms ease;
+        backdrop-filter: blur(18px);
+        min-width: 140px;
+      }
+
+      .crystal-button:hover,
+      .crystal-button:focus-visible {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(28, 188, 255, 0.35);
+        border-color: rgba(142, 255, 255, 0.6);
+        outline: none;
+      }
+
+      .crystal-button.is-active {
+        box-shadow: 0 24px 60px rgba(255, 183, 255, 0.45);
+        border-color: rgba(255, 210, 255, 0.75);
+      }
+
+      .crystal-nav__toggle {
+        align-self: flex-end;
+        font-size: 0.65rem;
+        letter-spacing: 0.14em;
+        opacity: 0.85;
+      }
+
+      .demo-section {
+        position: relative;
+        min-height: 85vh;
+        padding: 48px 5vw 60px;
+        border-radius: 32px;
+        background: linear-gradient(145deg, rgba(12, 19, 41, 0.45), rgba(4, 9, 24, 0.85));
+        box-shadow: 0 24px 120px rgba(4, 12, 40, 0.55);
+        border: 1px solid rgba(102, 217, 255, 0.08);
+        overflow: hidden;
+        scroll-margin-top: 160px;
+      }
+
+      .demo-section h2 {
+        margin: 0;
+        letter-spacing: 0.32em;
+        font-size: clamp(1.4rem, 4vw, 2.6rem);
+        text-transform: uppercase;
+        opacity: 0.8;
+      }
+
+      .demo-section::before {
+        content: "";
+        position: absolute;
+        inset: 12% 20% auto 20%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(87, 255, 255, 0.6), transparent);
+      }
+
+      .canvas-host {
+        filter: drop-shadow(0 24px 80px rgba(0, 245, 255, 0.2));
+      }
+
+      body[data-reduced-motion="true"] .crystal-button {
+        transition: none;
+        transform: none !important;
+        box-shadow: none !important;
+      }
+
+      body[data-reduced-motion="true"] .canvas-host {
+        filter: none;
+      }
+
+      section p,
+      section span {
+        max-width: 60ch;
+        line-height: 1.6;
+        opacity: 0.7;
+      }
+
+      @media (max-width: 900px) {
+        .vib34d-demo {
+          padding: 6vh 5vw 12vh;
+          gap: 12vh;
+        }
+
+        .crystal-nav {
+          margin: 16px 5vw 0;
+          align-items: flex-start;
+        }
+
+        .crystal-nav__tray {
+          justify-content: flex-start;
+        }
+
+        .demo-section {
+          min-height: 70vh;
+          padding: 36px 24px 48px;
+        }
+
+        .canvas-host {
+          height: 320px !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

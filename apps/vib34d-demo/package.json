@@ -1,0 +1,20 @@
+{
+  "name": "vib34d-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vib34d/adapter-sdk": "workspace:*",
+    "@vib34d/adapter-vib3plus": "workspace:*",
+    "@vib34d/core": "workspace:*",
+    "@vib34d/home-master": "workspace:*",
+    "@vib34d/multi": "workspace:*",
+    "@vib34d/scroll": "workspace:*",
+    "@vib34d/telemetry": "workspace:*",
+    "@vib34d/transition": "workspace:*"
+  }
+}

@@ -1,389 +1,127 @@
-# VIB34D STYLE SYSTEM - COMPLETE DOCUMENTATION
+# VIB34D System – Comprehensive Documentation
 
-## 🌟 SYSTEM OVERVIEW
+This document is the authoritative reference for the VIB34D multi-instance visualization system delivered in this repository. It complements SPEC-01-VIB34D by mapping requirements to concrete modules, algorithms, and configuration entry points.
 
-**VIB34D** (Vib3 4-Dimensional) is a revolutionary web-based visualization framework that creates multi-instance reactive visualizers with real-time geometry morphing, infinite scroll navigation, and mathematical parameter relationships. Originally developed for VIB3CODE magazine, it's designed as a universal framework for sophisticated visual web experiences.
+## 1. Architectural Overview
+- **Apps**
+  - `apps/vib34d-demo`: production-style showcase implementing infinite scroll, portal transitions, telemetry overlay, and crystal navigation.
+  - `apps/editor`: authoring surface that propagates parameter adjustments to the runtime via shared packages.
+- **Core Packages**
+  - `@vib34d/core`: renderer, geometry definitions, math utilities, config types, quality tiers.
+  - `@vib34d/multi`: multi-instance orchestration, reduced-motion plumbing, frame stats broadcast.
+  - `@vib34d/scroll`: velocity tracker, snap logic, transition triggering, Vitest coverage.
+  - `@vib34d/transition`: easing catalogue and typed transition requests.
+  - `@vib34d/home-master`: parameter derivation system seeded by the master section.
+  - `@vib34d/crystal-ui`: interactive crystal navigation controls (keyboard + hover + focus states).
+  - `@vib34d/telemetry`: batching, auto-flush behaviour, and adapter sink integration.
+  - `@vib34d/adapter-sdk` / `@vib34d/adapter-vib3plus`: adapters exposing external engines through the shared `RendererAdapter` contract.
 
----
+## 2. Renderer Core (`@vib34d/core`)
+- **Entry Point**: [`packages/@vib34d/core/src/renderer.ts`](packages/@vib34d/core/src/renderer.ts)
+- **Features**
+  - WebGL2 pipeline with configurable vertex/fragment shaders.
+  - Morph transitions driven by `GeometryTransition` (duration, easing, intensity).
+  - Adaptive quality tiers (`high`, `medium`, `low`) computed via `quality.ts` stride helpers.
+  - Reduced-motion mode disables morph interpolation and CSS transitions.
+  - Frame stats emission (frame time, tier) delivered via callback to orchestrator/telemetry.
+- **Math**
+  - 4D rotation + projection implemented in [`math4d.ts`](packages/@vib34d/core/src/math4d.ts).
+  - Geometry definitions (`hypercube`, `prism`, `tetra`, `dodeca`, `octa`, etc.) live in [`geometry.ts`](packages/@vib34d/core/src/geometry.ts).
+- **Config Surface**
+  - `VIB34DConfig` defined in [`config.ts`](packages/@vib34d/core/src/config.ts) provides strongly-typed runtime settings used across the workspace.
 
-## 🏗️ CORE ARCHITECTURE
+## 3. Multi-Instance Layer (`@vib34d/multi`)
+- **Entry Point**: [`packages/@vib34d/multi/src/index.ts`](packages/@vib34d/multi/src/index.ts)
+- **Responsibilities**
+  - Creates renderer instances using the adapter supplied by the host app.
+  - Applies visual templates (roles, modifiers, opacity, z-index) and ensures ≥3 canvases per section.
+  - Relays frame stats via `onFrameStats` subscriptions for telemetry dashboards.
+  - Reacts to reduced-motion toggles and ensures CSS/renderer state stays in sync.
+  - Coordinates transition requests with `TransitionEngine`.
 
-### **PHILOSOPHY: Mathematical Relational UI**
-- All visual elements derive from **mathematical relationships**
-- **Form maintains coherence** even when interactions "scramble" display
-- **4D polytopal projections** provide sophisticated geometric foundation
-- **Parameter derivation** ensures visual harmony across all sections
+## 4. Scroll & Transition Flow
+- **Scroll Orchestrator** (`packages/@vib34d/scroll/src/index.ts`)
+  - Maintains a 120ms velocity buffer and classifies intensity buckets.
+  - Implements snap-to-section logic with `scrollSnapEnabled` guard.
+  - Emits transition triggers consumed by the transition engine.
+  - Covered by [`index.test.ts`](packages/@vib34d/scroll/src/index.test.ts) using Vitest + jsdom.
+- **Transition Engine** (`packages/@vib34d/transition/src/index.ts`)
+  - Maps scroll events to morph targets using easing catalogues.
+  - Supports per-section overrides via `SectionTransitionConfig` entries.
 
-### **MULTI-INSTANCE CONCEPT**
-Each section displays **3+ simultaneous visualizer instances** with:
-- **Same geometry** (hypercube, tetrahedron, sphere, etc.)
-- **Different parameter variations** (base, base×1.3, base×0.7)
-- **Layered rendering** with different opacities and blend modes
-- **Coordinated behavior** maintaining mathematical relationships
+## 5. Parameter Derivation (`@vib34d/home-master`)
+- `HomeMaster` consumes base parameters (scale, luminance, velocity, etc.) and applies modifiers declared in the section config.
+- Synchronization leverages a broadcast channel (default `vib34d-master`). Any runtime or editor launched with the same `syncChannel` shares parameter updates.
+- Derived parameters are injected into DOM metadata in the demo (`data-derived` attributes) for debugging and editor introspection.
 
----
+## 6. Crystal UI (`@vib34d/crystal-ui`)
+- `createCrystalButton` renders a canvas-backed button with morph-on-hover/click behaviour.
+- Keyboard focus outlines and reduced-motion adjustments match accessibility criteria.
+- Used in the demo navigation ribbon to switch sections and propagate focus state.
 
-## 🎛️ SYSTEM COMPONENTS
+## 7. Telemetry Pipeline (`@vib34d/telemetry`)
+- `TelemetryBatcher` accepts events from renderer and scroll subsystems.
+- Flush conditions: interval (default 8s), manual `.flush()`, and page lifecycle events.
+- Delegates to adapter-provided sink via `adapter.telemetry.batch(events)`.
+- Expose `.dispose()` to flush outstanding events and remove lifecycle listeners when tearing down a runtime.
+- Designed to incorporate auto-flush hook from quaternion SDK PR #76 or vib3-plus equivalent.
 
-### **1. VIB34DCore** - Base Visualizer Engine
-```javascript
-class VIB34DCore {
-    constructor(canvas, options = {}) {
-        this.instanceId = options.instanceId;
-        this.instanceRole = options.role; // 'background', 'content', 'accent'
-        this.parameterModifier = options.modifier; // 1.0, 1.3, 0.7
-        this.currentTheme = options.geometry; // 'hypercube', 'tetrahedron', etc.
-    }
-}
-```
+## 8. Adapter Interface & Selection
+- `RendererAdapter` located at [`packages/@vib34d/core/src/adapter.ts`](packages/@vib34d/core/src/adapter.ts).
+- Both adapters provide `init`, `setShaders`, `onFrame`, `math`, and `telemetry` methods.
+- Demo uses `matchPreferredAdapter()` to pick adapter based on URL flag or feature heuristics.
+- Benchmark data should be recorded in [`docs/VIB34D_ENGINE_RUBRIC.md`](docs/VIB34D_ENGINE_RUBRIC.md).
+- Polytope warp integration: when an adapter exposes `math.polytopeWarp`, the core renderer blends warped vertices based on the orchestrator-supplied `data-warp` baseline. Portal transitions temporarily boost this intensity and revert after the glow timer completes, allowing vib3-plus to express warp advantages without breaking quaternion parity.
 
-**Features:**
-- **8 Geometry Types**: hypercube, tetrahedron, sphere, torus, klein, fractal, wave, crystal
-- **4D Mathematics**: rotateXW, rotateYW, rotateZW matrices for true hyperdimensional rotation
-- **WebGL Shaders**: Fragment shaders with 4D→3D projection functions
-- **Real-time Interaction**: Mouse, scroll, click, hold, idle detection
+## 9. Demo Application (`apps/vib34d-demo`)
+- Bootstraps configuration, sections, scroll orchestrator, transitions, multi-instance orchestrator, telemetry batcher, and navigation controls.
+- Registers intersection observers to activate sections and maintain `activeSection` state.
+- Honors `maxActiveVisualizers` by keeping only the most recent section clusters animating when several enter view, preventing unnecessary GPU churn on lower power devices.
+- Configures the scroll orchestrator with `scrollSnapEnabled` and ensures portal glow styling is skipped entirely when `portalEffectsEnabled` is disabled in the config surface.
+- Synchronizes reduced-motion preferences between system media query, user toggle, and orchestrator state.
+- Keyboard navigation handles `ArrowUp`, `ArrowDown`, `Home`, `End`, `PageUp`, `PageDown` to cycle sections.
+- Telemetry logs emitted to console with adapter identifier.
 
-**Geometry Mapping:**
-```javascript
-const geometryMap = { 
-    hypercube: 0,    // Master control geometry
-    tetrahedron: 1,  // Technical/structural content
-    sphere: 2,       // Infinite potential/philosophy
-    torus: 3,        // Continuous flow/media
-    klein: 4,        // Boundary transcendence/community
-    fractal: 5,      // Recursive complexity/development
-    wave: 6,         // Probability spaces/research
-    crystal: 7       // Universal UI framework/innovation
-};
-```
+## 10. Editor Application (`apps/editor`)
+- Shares packages with runtime to ensure parity.
+- Offers parameter inputs (scalars, toggles) and surfaces broadcast status plus a launch link that targets the matching demo URL.
+- Intended to be run alongside the demo for live authoring via the shared `syncChannel` bridge.
 
-### **2. VIB34DMultiInstance** - Section Visualizer Manager
-```javascript
-class VIB34DMultiInstance {
-    constructor(sectionElement, sectionKey, options = {}) {
-        this.instances = new Map(); // Multiple visualizer instances
-        this.instanceTemplates = {
-            header: { modifier: 1.0, opacity: 0.6, zIndex: 1 },
-            content: { modifier: 1.3, opacity: 0.4, zIndex: 2 },
-            background: { modifier: 0.7, opacity: 0.8, zIndex: 0 }
-        };
-    }
-}
-```
+## 11. Configuration Reference
+Key fields from `VIB34DConfig`:
+- `visualizerCount` (3–6 recommended)
+- `visualizerRoles` (array of role identifiers used by templates)
+- `sections` (map of section key to `geometry`, `modifier`, `snapPoint`)
+- `defaultTransitionRule` (string key consumed by transition engine)
+- `portalEffectsEnabled`, `scrollSnapEnabled`, `maxActiveVisualizers`, `viewportMargin`
+- `targetFPS`, `reducedMotion`, `telemetry.flushIntervalMs`
+- `editorMode`, `showControls`, `debugMode`
 
-**Instance Configuration:**
-```javascript
-// Standard 3-instance layout
-'standard': {
-    'header': { 
-        modifier: 1.0, role: 'header', zIndex: 1, opacity: 0.6,
-        position: { top: '0%', left: '0%', width: '100%', height: '100%' }
-    },
-    'content': { 
-        modifier: 1.3, role: 'content', zIndex: 2, opacity: 0.4,
-        position: { top: '0%', left: '0%', width: '100%', height: '100%' }
-    },
-    'background': { 
-        modifier: 0.7, role: 'background', zIndex: 0, opacity: 0.8,
-        position: { top: '0%', left: '0%', width: '100%', height: '100%' }
-    }
-}
-```
+Full tuning advice is captured in [`VIB34D_CONFIGURATION_GUIDE.md`](VIB34D_CONFIGURATION_GUIDE.md).
 
-### **3. VIB34DHomeMaster** - Mathematical Parameter Derivation
-```javascript
-class VIB34DHomeMaster {
-    constructor() {
-        this.sectionConfig = {
-            home: { geometry: 'hypercube', modifier: 1.0 },      // Base parameters
-            articles: { geometry: 'tetrahedron', modifier: 0.8 }, // Articles = Home × 0.8
-            videos: { geometry: 'sphere', modifier: 1.2 },        // Videos = Home × 1.2
-            podcasts: { geometry: 'torus', modifier: 1.1 },       // Podcasts = Home × 1.1
-            ema: { geometry: 'wave', modifier: 0.9 }              // EMA = Home × 0.9
-        };
-    }
-}
-```
+## 12. Testing & Validation
+- `pnpm run build` – ensures TypeScript compilation and Vite bundling succeed.
+- `pnpm run test` – executes Vitest suites (scroll behaviour, quality tier logic).
+- Manual validation: run demo + editor, verify scroll portals, quality tier transitions, telemetry flush events, keyboard navigation, reduced-motion toggles.
 
-**Parameter Derivation Logic:**
-```javascript
-deriveParametersForSection(sectionKey) {
-    const modifier = this.sectionConfig[sectionKey].modifier;
-    const derivedParams = {};
-    
-    Object.entries(this.masterParameters).forEach(([key, value]) => {
-        if (typeof value === 'number') {
-            derivedParams[key] = value * modifier; // Mathematical scaling
-        }
-    });
-    
-    return derivedParams;
-}
-```
+## 13. Performance Considerations
+- Renderer tracks frame time average; if >120% target, auto-downgrades tier; <80%, upgrades tier.
+- `qualityTierToStride` reduces geometry sampling to maintain 60 FPS desktop / 45 FPS mobile budgets.
+- Use browser devtools or telemetry logs to confirm tier behaviour.
 
-### **4. VIB34DTransitionEngine** - Geometry Morphing System
-```javascript
-class VIB34DTransitionEngine {
-    constructor(multiInstanceManager) {
-        this.transitionRules = {
-            smooth: { easing: this.easeInOutCubic, duration: 2000 },
-            dramatic: { easing: this.easeOutBounce, duration: 1500 },
-            wave: { easing: this.easeInOutSine, duration: 3000 },
-            instant: { easing: this.easeLinear, duration: 100 },
-            breathing: { easing: this.easeInOutQuad, duration: 4000 }
-        };
-    }
-}
-```
+## 14. Extensibility Hooks
+- **Geometry Expansion**: add definitions in `geometry.ts`, register edges/faces, and map to transitions.
+- **Transition Rules**: extend `TransitionEngine` catalogue with new easing functions and durations.
+- **Telemetry Sinks**: wrap `TelemetryBatcher` with custom network or analytics transport via adapter.
+- **Editor Controls**: extend editor UI to expose new parameters, ensuring propagation through `HomeMaster`.
+- **Sync Channel Strategy**: adjust `syncChannel` query/defaults when running multiple editors or demos simultaneously.
 
-**Transition Matrix:**
-```javascript
-this.geometryTransitionMatrix = {
-    hypercube: ['tetrahedron', 'sphere', 'crystal'],
-    tetrahedron: ['hypercube', 'sphere', 'torus'],
-    sphere: ['hypercube', 'tetrahedron', 'torus', 'wave'],
-    // ... defines valid morphing paths
-};
-```
+## 15. Compliance Checklist
+- ✅ Infinite scroll with velocity-driven portals
+- ✅ ≥3 synchronized visualizer instances per section
+- ✅ Reduced-motion + keyboard navigation support
+- ✅ Crystal UI navigation replaces HTML buttons
+- ✅ Telemetry auto-flush integration hooks
+- ✅ Configurable `VIB34DConfig` surface with documentation
 
----
-
-## 🎨 INFINITE SCROLL + PORTAL TRANSITION SYSTEM
-
-### **Section Navigation Architecture**
-```javascript
-class VIB34DInfiniteScroll {
-    constructor() {
-        this.sections = [
-            { key: 'home', geometry: 'hypercube', snapPoint: 0 },
-            { key: 'articles', geometry: 'tetrahedron', snapPoint: 1000 },
-            { key: 'videos', geometry: 'sphere', snapPoint: 2000 },
-            { key: 'podcasts', geometry: 'torus', snapPoint: 3000 },
-            { key: 'ema', geometry: 'wave', snapPoint: 4000 }
-        ];
-        this.currentSection = 0;
-        this.scrollVelocity = 0;
-        this.isTransitioning = false;
-    }
-}
-```
-
-### **Portal Transition Effects**
-```javascript
-calculatePortalIntensity(scrollVelocity) {
-    // Slow scroll = gentle morphing
-    if (scrollVelocity < 10) return 'gentle';
-    
-    // Medium scroll = standard transition
-    if (scrollVelocity < 50) return 'standard';
-    
-    // Fast scroll = dramatic portal effect
-    return 'dramatic';
-}
-
-triggerPortalTransition(fromGeometry, toGeometry, intensity) {
-    const effects = {
-        gentle: { glitchIntensity: 0.2, morphSpeed: 1.0, dimensionShift: 0.1 },
-        standard: { glitchIntensity: 0.5, morphSpeed: 1.5, dimensionShift: 0.3 },
-        dramatic: { glitchIntensity: 0.8, morphSpeed: 2.0, dimensionShift: 0.5 }
-    };
-    
-    this.applyPortalEffects(effects[intensity]);
-}
-```
-
-### **Snap Point System**
-```javascript
-handleScroll(scrollY) {
-    const targetSection = this.calculateTargetSection(scrollY);
-    
-    if (targetSection !== this.currentSection) {
-        this.snapToSection(targetSection);
-        this.triggerGeometryTransition(targetSection);
-    }
-}
-
-snapToSection(sectionIndex) {
-    const snapPoint = this.sections[sectionIndex].snapPoint;
-    
-    // Smooth snap with CSS scroll-snap or programmatic scrolling
-    window.scrollTo({
-        top: snapPoint,
-        behavior: 'smooth'
-    });
-}
-```
-
----
-
-## 🎛️ EDITOR SYSTEM ARCHITECTURE
-
-### **Separate Editor Dashboard**
-```javascript
-// Production Site: Clean user experience
-const productionConfig = {
-    editorMode: false,
-    showControls: false,
-    userInteraction: true
-};
-
-// Editor Dashboard: Full control access
-const editorConfig = {
-    editorMode: true,
-    showControls: true,
-    realTimePreview: true,
-    parameterAdjustment: true
-};
-```
-
-### **Editor Dashboard Components**
-1. **Home-Master Control Panel**
-   - Parameter sliders for base values
-   - Preset management (calm, dynamic, hyperdimensional, editorial)
-   - Real-time preview of parameter propagation
-
-2. **Transition Editor**
-   - Geometry transition rule selection
-   - Transition timing and intensity controls
-   - Preview of geometry morphing effects
-
-3. **Section Configuration**
-   - Geometry assignment per section
-   - Parameter modifier adjustment
-   - Instance count and role configuration
-
-4. **Performance Monitor**
-   - FPS tracking and optimization
-   - Memory usage monitoring
-   - WebGL context health checks
-
----
-
-## 💎 CRYSTAL UI FRAMEWORK
-
-### **Crystal Geometry as Universal UI**
-```javascript
-class CrystalUIElement {
-    constructor(element, options = {}) {
-        this.element = element;
-        this.crystalGeometry = new VIB34DCore(this.createCanvas(), {
-            geometry: 'crystal',
-            role: 'ui-element',
-            modifier: options.modifier || 1.0
-        });
-        
-        this.setupInteractivity();
-    }
-    
-    setupInteractivity() {
-        this.element.addEventListener('click', () => {
-            this.triggerCrystalMorph('click');
-        });
-        
-        this.element.addEventListener('hover', () => {
-            this.triggerCrystalMorph('hover');
-        });
-    }
-}
-```
-
-### **Crystal UI Components**
-```javascript
-// Navigation buttons
-const navButton = new CrystalUIElement(buttonElement, {
-    modifier: 1.0,
-    hoverEffect: 'dimensional-shift',
-    clickEffect: 'crystalline-pulse'
-});
-
-// CTAs and interactive elements
-const ctaButton = new CrystalUIElement(ctaElement, {
-    modifier: 1.3,
-    hoverEffect: 'morphological-glow',
-    clickEffect: 'geometric-explosion'
-});
-```
-
----
-
-## ⚙️ CONFIGURATION SYSTEM
-
-### **Easy Customization Interface**
-```javascript
-window.VIB34DConfig = {
-    // EASY TO ADJUST VISUALIZER COUNT
-    visualizerCount: 3,  // 3-6 recommended
-    visualizerRoles: ['background', 'content', 'accent'],
-    
-    // SECTION CONFIGURATION
-    sections: {
-        home: { geometry: 'hypercube', modifier: 1.0 },
-        articles: { geometry: 'tetrahedron', modifier: 0.8 },
-        videos: { geometry: 'sphere', modifier: 1.2 }
-    },
-    
-    // TRANSITION SETTINGS
-    defaultTransitionRule: 'smooth',
-    scrollSnapEnabled: true,
-    portalEffectsEnabled: true,
-    
-    // PERFORMANCE SETTINGS
-    maxActiveVisualizers: 9, // 3 per section × 3 visible sections
-    viewportMargin: '100px',
-    targetFPS: 60,
-    
-    // EDITOR SETTINGS
-    editorMode: false,
-    showControls: false,
-    debugMode: false
-};
-```
-
----
-
-## 🚀 CURRENT STATUS
-
-### **IMPLEMENTED ✅**
-- VIB34DCore with 8 geometries and 4D mathematics
-- VIB34DMultiInstance for flexible visualizer assignment
-- VIB34DHomeMaster for mathematical parameter derivation
-- VIB34DTransitionEngine with 5 transition rules
-- Basic section detection and global visualizer pool
-
-### **IN PROGRESS 🔄**
-- Infinite scroll with portal transitions
-- Section-specific multi-instance display (3+ per section)
-- Editor dashboard separation
-- Crystal UI framework implementation
-
-### **PLANNED 📋**
-- Performance optimization for mobile
-- Advanced transition effects
-- Audio reactivity integration
-- Framework-specific integration packages
-
----
-
-## 🎯 IMMEDIATE NEXT STEPS
-
-1. **Implement Infinite Scroll System**
-   - Section snap points
-   - Scroll velocity detection
-   - Portal transition effects
-
-2. **Restore Multi-Instance Per Section**
-   - 3+ visualizers per section with same geometry
-   - Parameter variations (base, ×1.3, ×0.7)
-   - Viewport-aware activation
-
-3. **Hide Editor Controls**
-   - Separate editor dashboard
-   - Production mode configuration
-   - Clean user experience
-
-4. **Crystal UI Framework**
-   - Replace HTML buttons with crystal geometry
-   - Interactive morphing on hover/click
-   - Universal design language
-
-This system represents the future of interactive web visualization - combining mathematical beauty with practical functionality and unprecedented user experiences.
+Keep this document updated as functionality evolves; it is the single source of truth for system design and behaviour.
