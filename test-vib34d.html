@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIB34D System Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .test-section {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 2px solid #333;
+        }
+
+        .test-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #00ffff;
+        }
+
+        p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        #debug-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ffff;
+            border-radius: 10px;
+            padding: 1rem;
+            z-index: 10000;
+            font-family: monospace;
+            font-size: 0.8rem;
+            max-width: 300px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.3rem 0;
+            padding: 0.3rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .status-label {
+            color: #00aaff;
+        }
+
+        .status-value {
+            color: #00ff88;
+        }
+
+        .status-error {
+            color: #ff0055;
+        }
+
+        button {
+            background: #00ffff;
+            color: #000;
+            border: none;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #ff00ff;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Debug Panel -->
+    <div id="debug-panel">
+        <div style="font-size: 1rem; font-weight: bold; margin-bottom: 0.5rem; color: #00ffff;">
+            🔍 VIB34D DEBUG
+        </div>
+        <div class="status-item">
+            <span class="status-label">System Status:</span>
+            <span class="status-value" id="systemStatus">Loading...</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">VIB34DCore:</span>
+            <span class="status-value" id="coreStatus">...</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">StyleSystem:</span>
+            <span class="status-value" id="styleStatus">...</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Sections:</span>
+            <span class="status-value" id="sectionCount">0</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Canvases:</span>
+            <span class="status-value" id="canvasCount">0</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">WebGL Contexts:</span>
+            <span class="status-value" id="contextCount">0</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Render Loop:</span>
+            <span class="status-value" id="renderStatus">...</span>
+        </div>
+        <div style="margin-top: 1rem;">
+            <button onclick="testSystem()">Run Tests</button>
+            <button onclick="toggleDebug()">Toggle Log</button>
+        </div>
+        <div id="console-log" style="display: none; margin-top: 1rem; max-height: 200px; overflow-y: auto; font-size: 0.7rem; background: #000; padding: 0.5rem; border-radius: 5px;">
+            <!-- Console messages will appear here -->
+        </div>
+    </div>
+
+    <!-- Test Sections -->
+    <section id="section-home" class="test-section" data-section="home">
+        <div class="test-content">
+            <h1>VIB34D SYSTEM TEST</h1>
+            <p>Testing Multi-Visualizer Styles Package</p>
+            <p style="margin-top: 1rem;">Geometry: <strong style="color: #ff00ff;">HYPERCUBE</strong></p>
+            <p>Modifier: <strong style="color: #00ffff;">1.0</strong> (Master)</p>
+        </div>
+    </section>
+
+    <section id="section-articles" class="test-section" data-section="articles" data-geometry="tetrahedron">
+        <div class="test-content">
+            <h2>Articles Section</h2>
+            <p>Geometry: <strong style="color: #00ffff;">TETRAHEDRON</strong></p>
+            <p>Modifier: <strong style="color: #00ffff;">0.8</strong> (Home × 0.8)</p>
+        </div>
+    </section>
+
+    <section id="section-videos" class="test-section" data-section="videos" data-geometry="sphere">
+        <div class="test-content">
+            <h2>Videos Section</h2>
+            <p>Geometry: <strong style="color: #ffff00;">SPHERE</strong></p>
+            <p>Modifier: <strong style="color: #ffff00;">1.2</strong> (Home × 1.2)</p>
+        </div>
+    </section>
+
+    <section id="section-podcasts" class="test-section" data-section="podcasts" data-geometry="torus">
+        <div class="test-content">
+            <h2>Podcasts Section</h2>
+            <p>Geometry: <strong style="color: #00ff00;">TORUS</strong></p>
+            <p>Modifier: <strong style="color: #00ff00;">1.1</strong> (Home × 1.1)</p>
+        </div>
+    </section>
+
+    <section id="section-ema" class="test-section" data-section="ema">
+        <div class="test-content">
+            <h2>EMA Section</h2>
+            <p>Geometry: <strong style="color: #ff0088;">WAVE</strong></p>
+            <p>Modifier: <strong style="color: #ff0088;">0.9</strong> (Home × 0.9)</p>
+        </div>
+    </section>
+
+    <!-- VIB34D Configuration -->
+    <script>
+        window.VIB34DConfig = {
+            visualizerCount: 1,
+            visualizerRoles: ['unified'],
+            defaultGeometry: 'hypercube',
+            defaultPreset: 'editorial',
+            enableCanvasConsolidation: true,
+            enableInfiniteScroll: false,
+            portalEffectsEnabled: false,
+            defaultTransitionRule: 'smooth',
+            enableCrystalUI: false,  // Disabled for test
+            crystalBackboneEnabled: false,
+            unifyAllSections: false,
+            targetFPS: 60,
+            enableViewportOptimization: true,
+            editorMode: false,
+            showControls: false,
+            debugMode: true,
+            enableEditor: false
+        };
+    </script>
+
+    <!-- VIB34D System Scripts -->
+    <script src="js/vib34d-core.js"></script>
+    <script src="js/vib34d-multi-instance.js"></script>
+    <script src="js/vib34d-home-master.js"></script>
+    <script src="js/vib34d-transition-engine.js"></script>
+    <script src="js/vib34d-style-system.js"></script>
+
+    <!-- Test Script -->
+    <script>
+        // Capture console logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const consoleLogDiv = document.getElementById('console-log');
+        const logs = [];
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const message = args.map(arg =>
+                typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+            ).join(' ');
+            logs.push({ type: 'log', message, time: new Date().toLocaleTimeString() });
+            updateConsoleLog();
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            const message = args.map(arg =>
+                typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+            ).join(' ');
+            logs.push({ type: 'error', message, time: new Date().toLocaleTimeString() });
+            updateConsoleLog();
+        };
+
+        function updateConsoleLog() {
+            if (consoleLogDiv.style.display !== 'none') {
+                consoleLogDiv.innerHTML = logs.slice(-20).map(log =>
+                    `<div style="color: ${log.type === 'error' ? '#ff0055' : '#00ff88'}">
+                        [${log.time}] ${log.message}
+                    </div>`
+                ).join('');
+                consoleLogDiv.scrollTop = consoleLogDiv.scrollHeight;
+            }
+        }
+
+        function toggleDebug() {
+            const display = consoleLogDiv.style.display === 'none' ? 'block' : 'none';
+            consoleLogDiv.style.display = display;
+            if (display === 'block') updateConsoleLog();
+        }
+
+        // Update debug panel
+        function updateDebugPanel() {
+            // Check if VIB34D classes exist
+            document.getElementById('coreStatus').textContent =
+                typeof VIB34DCore !== 'undefined' ? '✓ Loaded' : '✗ Missing';
+            document.getElementById('coreStatus').className =
+                typeof VIB34DCore !== 'undefined' ? 'status-value' : 'status-error';
+
+            document.getElementById('styleStatus').textContent =
+                typeof VIB34DStyleSystem !== 'undefined' ? '✓ Loaded' : '✗ Missing';
+            document.getElementById('styleStatus').className =
+                typeof VIB34DStyleSystem !== 'undefined' ? 'status-value' : 'status-error';
+
+            // Count canvases
+            const canvases = document.querySelectorAll('canvas.vib34d-canvas');
+            document.getElementById('canvasCount').textContent = canvases.length;
+
+            // Try to get system instance
+            const system = window.getVIB34DStyleSystem ? window.getVIB34DStyleSystem() : null;
+
+            if (system) {
+                document.getElementById('systemStatus').textContent = '✓ Running';
+                document.getElementById('sectionCount').textContent = system.multiInstanceManagers?.size || 0;
+                document.getElementById('renderStatus').textContent = system.renderLoopActive ? '✓ Active' : '✗ Inactive';
+            } else {
+                document.getElementById('systemStatus').textContent = '⏳ Initializing...';
+            }
+
+            // Estimate WebGL contexts
+            document.getElementById('contextCount').textContent = canvases.length;
+        }
+
+        function testSystem() {
+            console.log('🧪 Running VIB34D System Tests...');
+
+            // Test 1: Check classes
+            console.log('Test 1: Checking class definitions...');
+            console.log('  VIB34DCore:', typeof VIB34DCore !== 'undefined' ? '✓' : '✗');
+            console.log('  VIB34DMultiInstance:', typeof VIB34DMultiInstance !== 'undefined' ? '✓' : '✗');
+            console.log('  VIB34DHomeMaster:', typeof VIB34DHomeMaster !== 'undefined' ? '✓' : '✗');
+            console.log('  VIB34DTransitionEngine:', typeof VIB34DTransitionEngine !== 'undefined' ? '✓' : '✗');
+            console.log('  VIB34DStyleSystem:', typeof VIB34DStyleSystem !== 'undefined' ? '✓' : '✗');
+
+            // Test 2: Check system instance
+            console.log('Test 2: Checking system instance...');
+            const system = window.getVIB34DStyleSystem ? window.getVIB34DStyleSystem() : null;
+            if (system) {
+                console.log('  System instance: ✓');
+                console.log('  Sections detected:', system.sections?.size || 0);
+                console.log('  Multi-instance managers:', system.multiInstanceManagers?.size || 0);
+                console.log('  Render loop active:', system.renderLoopActive);
+
+                // Test 3: Check canvases
+                console.log('Test 3: Checking canvases...');
+                const canvases = document.querySelectorAll('canvas.vib34d-canvas');
+                console.log('  Canvas count:', canvases.length);
+                canvases.forEach((canvas, i) => {
+                    console.log(`  Canvas ${i}: ${canvas.id}, ${canvas.width}x${canvas.height}`);
+                });
+
+                // Test 4: Check managers
+                console.log('Test 4: Checking multi-instance managers...');
+                if (system.multiInstanceManagers) {
+                    system.multiInstanceManagers.forEach((manager, key) => {
+                        console.log(`  Manager [${key}]:`, {
+                            geometry: manager.geometry,
+                            isActive: manager.isActive,
+                            hasRenderer: !!manager.renderer,
+                            variations: manager.geometryVariations?.length || 0
+                        });
+                    });
+                }
+
+                console.log('✅ Tests complete!');
+            } else {
+                console.error('✗ System not initialized!');
+            }
+
+            updateDebugPanel();
+        }
+
+        // Auto-update debug panel
+        setInterval(updateDebugPanel, 1000);
+
+        // Initial update
+        setTimeout(() => {
+            updateDebugPanel();
+            console.log('🎬 VIB34D Test Page Loaded');
+            console.log('💡 Click "Run Tests" to verify system');
+        }, 500);
+
+        // Run tests after system initializes
+        setTimeout(testSystem, 2000);
+    </script>
+</body>
+</html>
