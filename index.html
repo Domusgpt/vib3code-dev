@@ -3,693 +3,864 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIB3CODE - VIB34D Style System</title>
-    <meta name="description" content="The premier digital magazine showcasing the VIB34D Style System - Multi-Visualizer Styles Package with 4D polytopal projections">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+Pro:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>VIB3CODE - Digital Sovereignty & EMA Philosophy</title>
+    <meta name="description" content="Premium digital magazine covering Exoditical Moral Architecture, digital sovereignty, and ethical technology development">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+Pro:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            /* VIB34D Style System Colors */
+            /* EMA Color System */
             --color-sovereignty: #1a1a2e;
-            --color-liberation: #16213e; 
+            --color-liberation: #16213e;
             --color-bridge: #0f3460;
             --color-accent: #e94560;
             --color-wisdom: #f5f5f5;
-            --color-success: #00ff88;
-            --color-warning: #ffaa00;
-            --color-info: #00aaff;
-            
+            --color-text: #e0e0e0;
+            --color-text-muted: #a0a0a0;
+
             /* Typography */
             --font-display: 'Playfair Display', serif;
             --font-serif: 'Source Serif Pro', serif;
             --font-sans: 'Inter', sans-serif;
-            
-            /* Grid System */
-            --container-max: 1440px;
-            --grid-gap: 2rem;
+
+            /* Spacing */
+            --container-max: 1200px;
+            --section-padding: 4rem 2rem;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             background: var(--color-sovereignty);
-            color: var(--color-wisdom);
+            color: var(--color-text);
             font-family: var(--font-serif);
-            line-height: 1.6;
+            line-height: 1.7;
             overflow-x: hidden;
         }
-        
-        /* Content Layer - Above VIB34D Multi-Instance Visualizers */
-        .content-layer {
-            position: relative;
-            z-index: 10;
-            background: transparent;
-            /* Removed opaque background that was blocking visualizers */
-        }
-        
-        /* Header Navigation */
+
+        /* Navigation */
         .header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            z-index: 100;
+            z-index: 1000;
             background: rgba(26, 26, 46, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1rem 0;
         }
-        
+
         .nav-container {
             max-width: var(--container-max);
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
             font-family: var(--font-display);
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 900;
-            background: linear-gradient(45deg, var(--color-accent), #00ffff, #ff00ff);
+            color: var(--color-wisdom);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, var(--color-accent), #ff6b9d);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-decoration: none;
         }
-        
+
         .nav-menu {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             list-style: none;
         }
-        
-        .nav-item a {
-            color: var(--color-wisdom);
+
+        .nav-menu a {
+            color: var(--color-text);
             text-decoration: none;
             font-family: var(--font-sans);
             font-weight: 500;
-            transition: color 0.3s ease;
+            font-size: 0.95rem;
+            transition: color 0.3s;
         }
-        
-        .nav-item a:hover {
+
+        .nav-menu a:hover {
             color: var(--color-accent);
         }
-        
-        /* Section Base Styles - PPP Compatible */
+
+        /* Section Base */
         .section {
+            position: relative;
+            padding: var(--section-padding);
             min-height: 100vh;
-            padding: 6rem 2rem;
-            position: relative; /* Required for PPP canvas positioning */
-            overflow: hidden;   /* Contain visualizer effects */
         }
-        
-        .section-container {
+
+        .section:first-of-type {
+            padding-top: 6rem;
+        }
+
+        .container {
             max-width: var(--container-max);
             margin: 0 auto;
             position: relative;
             z-index: 10;
         }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-        
-        .section-title {
-            font-family: var(--font-display);
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: titlePulse 3s ease-in-out infinite;
-        }
-        
-        .section-subtitle {
-            font-size: 1.3rem;
-            opacity: 0.8;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
+
         /* Hero Section */
         .hero {
+            min-height: 90vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 8rem 2rem 4rem;
         }
-        
+
         .hero-content {
-            max-width: 900px;
-            background: rgba(26, 26, 46, 0.6);
-            border-radius: 20px;
-            padding: 4rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 0, 255, 0.3);
+            max-width: 800px;
         }
-        
+
         .hero h1 {
             font-family: var(--font-display);
-            font-size: 5rem;
+            font-size: 4.5rem;
             font-weight: 900;
+            line-height: 1.1;
             margin-bottom: 1.5rem;
-            background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: titlePulse 3s ease-in-out infinite;
+            letter-spacing: -2px;
         }
-        
-        .hero .subtitle {
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            color: var(--color-info);
-            font-weight: 600;
-        }
-        
-        .hero .description {
-            font-size: 1.3rem;
+
+        .hero .tagline {
+            font-size: 1.5rem;
+            color: var(--color-text-muted);
             margin-bottom: 3rem;
-            opacity: 0.9;
-            line-height: 1.8;
+            font-weight: 400;
         }
-        
-        .cta-buttons {
+
+        .cta-group {
             display: flex;
             gap: 1.5rem;
             justify-content: center;
-            flex-wrap: wrap;
         }
-        
+
         .btn {
-            padding: 1.2rem 2.5rem;
-            border: 2px solid;
+            padding: 1rem 2.5rem;
             border-radius: 50px;
             text-decoration: none;
             font-family: var(--font-sans);
             font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-wisdom);
+            border: 2px solid var(--color-wisdom);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-wisdom);
+            color: var(--color-sovereignty);
+        }
+
+        /* Section Header */
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .section-description {
+            font-size: 1.2rem;
+            color: var(--color-text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Article Grid */
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .article-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s;
             cursor: pointer;
         }
-        
-        .btn-primary {
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--color-accent);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, var(--color-bridge), var(--color-liberation));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-category {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--color-accent);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .article-content {
+            padding: 2rem;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .article-title {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+
+        .article-title a {
+            color: var(--color-wisdom);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .article-title a:hover {
+            color: var(--color-accent);
+        }
+
+        .article-excerpt {
+            color: var(--color-text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .read-more {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .read-more:hover {
+            gap: 0.8rem;
+        }
+
+        /* Featured Article */
+        .featured-article {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            margin-bottom: 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .featured-image {
+            background: linear-gradient(135deg, var(--color-accent), #ff6b9d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            min-height: 400px;
+        }
+
+        .featured-content {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .featured-label {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .featured-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .featured-excerpt {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
+        }
+
+        /* Categories */
+        .category-nav {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .category-tag {
+            padding: 0.7rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            color: var(--color-text);
+            text-decoration: none;
+            font-family: var(--font-sans);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .category-tag:hover,
+        .category-tag.active {
             background: var(--color-accent);
             color: white;
             border-color: var(--color-accent);
         }
-        
-        .btn-primary:hover {
-            background: transparent;
-            color: var(--color-accent);
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: var(--color-info);
-            border-color: var(--color-info);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--color-info);
-            color: var(--color-sovereignty);
-            transform: translateY(-2px);
-        }
-        
-        /* Content Cards */
-        .content-card {
-            background: rgba(26, 26, 46, 0.6);
+
+        /* Newsletter */
+        .newsletter {
+            background: rgba(233, 69, 96, 0.1);
+            border: 1px solid var(--color-accent);
             border-radius: 20px;
             padding: 3rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            margin-bottom: 2rem;
+            text-align: center;
+            margin: 4rem 0;
         }
-        
-        .content-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(0, 255, 255, 0.5);
-            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.1);
-        }
-        
-        .content-card h3 {
+
+        .newsletter h3 {
             font-family: var(--font-display);
             font-size: 2rem;
             margin-bottom: 1rem;
-            color: var(--color-info);
         }
-        
-        .content-card p {
+
+        .newsletter p {
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
             font-size: 1.1rem;
-            opacity: 0.9;
-            line-height: 1.8;
         }
-        
-        /* PPP Features Grid */
-        .ppp-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: var(--grid-gap);
-            margin: 4rem 0;
-        }
-        
-        .feature-card {
-            background: rgba(26, 26, 46, 0.6);
-            border-radius: 15px;
-            padding: 2.5rem;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .feature-card:hover {
-            transform: scale(1.02);
-            border-color: var(--color-accent);
-        }
-        
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            display: block;
-        }
-        
-        .feature-title {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--color-accent);
-        }
-        
-        /* System Status Display */
-        .system-status {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(26, 26, 46, 0.9);
-            border: 1px solid var(--color-info);
-            border-radius: 10px;
-            padding: 1rem;
-            z-index: 1000;
-            font-family: var(--font-sans);
-            font-size: 0.8rem;
-            min-width: 200px;
-        }
-        
-        .status-row {
+
+        .newsletter-form {
             display: flex;
-            justify-content: space-between;
-            margin: 0.3rem 0;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
         }
-        
-        .status-label {
-            color: var(--color-info);
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            color: white;
+            font-family: var(--font-sans);
+            font-size: 1rem;
         }
-        
-        .status-value {
-            color: var(--color-wisdom);
-            font-family: monospace;
+
+        .newsletter-form input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
         }
-        
+
+        .newsletter-form button {
+            padding: 1rem 2.5rem;
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .newsletter-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+        }
+
         /* Footer */
         .footer {
-            padding: 4rem 2rem 2rem;
+            background: rgba(0, 0, 0, 0.3);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(26, 26, 46, 0.95);
-            text-align: center;
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
         }
-        
-        /* Responsive Design */
+
+        .footer-content {
+            max-width: var(--container-max);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            font-family: var(--font-display);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p {
+            color: var(--color-text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-accent);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--color-text-muted);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 3rem;
+                font-size: 2.5rem;
             }
-            
+
             .nav-menu {
                 display: none;
             }
-            
-            .ppp-features {
+
+            .article-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .cta-buttons {
+
+            .featured-article {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-group {
                 flex-direction: column;
-                align-items: center;
             }
-            
-            .section {
-                padding: 4rem 1rem;
-            }
-        }
-        
-        /* Animations */
-        @keyframes titlePulse {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.02); }
-        }
-        
-        /* Loading Animation */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--color-sovereignty);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-display);
-            font-size: 2rem;
-            transition: opacity 0.5s ease;
-        }
-        
-        .loading-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
         }
     </style>
 </head>
 <body>
-    <!-- VIB34D Loading Overlay (Auto-Hide) -->
-    <div id="loading-overlay" class="loading-overlay hidden">
-        <div>🎨 VIB34D Style System Ready!</div>
-    </div>
-    
     <!-- Header -->
     <header class="header">
         <nav class="nav-container">
-            <a href="#" class="logo">VIB3CODE</a>
+            <a href="#" class="logo"><span>VIB3</span>CODE</a>
             <ul class="nav-menu">
-                <li class="nav-item"><a href="#home">Home</a></li>
-                <li class="nav-item"><a href="#about">About PPP</a></li>
-                <li class="nav-item"><a href="#features">Features</a></li>
-                <li class="nav-item"><a href="#demo">Live Demo</a></li>
-                <li class="nav-item"><a href="#future">Future</a></li>
+                <li><a href="#articles">Articles</a></li>
+                <li><a href="#ema">EMA Philosophy</a></li>
+                <li><a href="#tech">Technical</a></li>
+                <li><a href="#community">Community</a></li>
+                <li><a href="#about">About</a></li>
             </ul>
         </nav>
     </header>
-    
-    <!-- Content Layer -->
-    <div class="content-layer">
-        <!-- Hero Section - Master Control (Hypercube) -->
-        <section id="home" class="section hero" data-section="home">
+
+    <!-- Hero Section -->
+    <section class="hero section" data-section="home">
+        <div class="container">
             <div class="hero-content">
-                <h1>VIB3CODE</h1>
-                <p class="subtitle">VIB34D Style System</p>
-                <p class="description">Multi-Visualizer Styles Package featuring 4D polytopal projections - where mathematical beauty meets creator control. Experience the future of multi-instance reactive visualizers with transition morphing and editor controls.</p>
-                <div class="cta-buttons">
-                    <a href="#features" class="btn btn-primary">Explore VIB34D System</a>
-                    <a href="#demo" class="btn btn-secondary">Try Transition Editor</a>
+                <h1>Where Technology Meets<br>Editorial Excellence</h1>
+                <p class="tagline">Premium digital magazine covering Exoditical Moral Architecture, digital sovereignty, and the future of ethical technology.</p>
+                <div class="cta-group">
+                    <a href="#articles" class="btn btn-primary">Explore Articles</a>
+                    <a href="#ema" class="btn btn-secondary">Learn About EMA</a>
                 </div>
             </div>
-        </section>
-        
-        <!-- About VIB34D Section - Tetrahedron Theme -->
-        <section id="about" class="section" data-section="articles" data-geometry="tetrahedron">
-            <div class="section-container">
-                <div class="section-header">
-                    <h2 class="section-title">The VIB34D Style System</h2>
-                    <p class="section-subtitle">Multi-Visualizer Styles Package with 4D Polytopal Projections</p>
-                </div>
-                
-                <div class="content-card">
-                    <h3>🎛️ Home-Master Parameter Derivation</h3>
-                    <p>Revolutionary multi-section coordination where the home section controls ALL other sections through mathematical relationships. Articles = Home × 0.8, Videos = Home × 1.2, creating unified design coherence across the entire experience while maintaining relational mathematical beauty.</p>
-                </div>
-                
-                <div class="content-card">
-                    <h3>✨ Multi-Instance Per Section</h3>
-                    <p>Each section displays 3+ simultaneous visualizer instances with the SAME 4D geometry but DIFFERENT parameter variations (base, base×1.3, base×0.7). This creates rich, layered visual experiences where multiple instances work together in mathematical harmony.</p>
-                </div>
-                
-                <div class="content-card">
-                    <h3>🔄 Transition Morphing Engine</h3>
-                    <p>Seamless geometry morphing between 4D shapes (hypercube → tetrahedron → sphere) with editor-controllable transition rules: smooth, dramatic, wave, instant, breathing. Real-time morphing preserves visual coherence during state changes.</p>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Features Section - Sphere Theme -->
-        <section id="features" class="section" data-section="videos" data-geometry="sphere">
-            <div class="section-container">
-                <div class="section-header">
-                    <h2 class="section-title">VIB34D System Features</h2>
-                    <p class="section-subtitle">Multi-visualizer framework with transition engine controls</p>
-                </div>
-                
-                <div class="ppp-features">
-                    <div class="feature-card">
-                        <span class="feature-icon">🎬</span>
-                        <h3 class="feature-title">Transition Editor Controls</h3>
-                        <p>Editor-controllable transition rules for seamless geometry morphing: smooth, dramatic, wave, instant, breathing. Real-time visual state management with elegant transitions.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <span class="feature-icon">🔗</span>
-                        <h3 class="feature-title">Mathematical Relationships</h3>
-                        <p>Home-master parameter derivation ensures mathematical harmony across all sections. Articles = Home × 0.8, Videos = Home × 1.2, maintaining relational coherence.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <span class="feature-icon">⚡</span>
-                        <h3 class="feature-title">Multi-Instance Performance</h3>
-                        <p>Multiple visualizers per section with viewport-aware loading. Only visible instances consume GPU resources, ensuring 60fps performance across all devices.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <span class="feature-icon">🌐</span>
-                        <h3 class="feature-title">4D Polytopal Projections</h3>
-                        <p>True 4D→3D mathematical transformations with rotateXW, rotateYW, rotateZW matrices. Advanced hyperdimensional visualization for sophisticated visual experiences.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <span class="feature-icon">🎨</span>
-                        <h3 class="feature-title">8 Geometry Framework</h3>
-                        <p>Hypercube, Tetrahedron, Sphere, Torus, Klein, Fractal, Wave, Crystal - each with unique mathematical properties and visual characteristics for unlimited creative possibilities.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <span class="feature-icon">🎛️</span>
-                        <h3 class="feature-title">Comprehensive Interaction</h3>
-                        <p>Scroll velocity, click events, hold interactions, idle detection, keyboard controls. Every user behavior drives parameter modifications for truly reactive experiences.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Live Demo Section - Torus Theme -->
-        <section id="demo" class="section" data-section="podcasts" data-geometry="torus">
-            <div class="section-container">
-                <div class="section-header">
-                    <h2 class="section-title">Live VIB34D Demo</h2>
-                    <p class="section-subtitle">Experience multi-instance visualizers with transition morphing - use the editor controls!</p>
-                </div>
-                
-                <div class="content-card">
-                    <h3>🖱️ Try Interacting</h3>
-                    <p><strong>Move your mouse</strong> around this page to see the visualizers respond to your position. <strong>Scroll</strong> at different speeds to watch the intensity change. <strong>Click</strong> anywhere to trigger impact waves.</p>
-                </div>
-                
-                <div class="content-card">
-                    <h3>🎛️ Use the Controls</h3>
-                    <p>Click the <strong>"🎛️ PPP Controls"</strong> button in the top-right corner to access the full editor interface. Try changing the master geometry, adjusting intensity, or switching to a different preset.</p>
-                </div>
-                
-                <div class="content-card">
-                    <h3>🎨 Notice the Harmony</h3>
-                    <p>Watch how each section maintains its unique visual character while staying harmoniously connected. The mathematical relationships ensure perfect consistency even as parameters change.</p>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Future Vision Section - Wave Theme -->
-        <section id="future" class="section" data-section="ema">
-            <div class="section-container">
-                <div class="section-header">
-                    <h2 class="section-title">The Future of Web Visuals</h2>
-                    <p class="section-subtitle">Beyond VIB3CODE - PPP Style System goes universal</p>
-                </div>
-                
-                <div class="content-card">
-                    <h3>🚀 Commercial Applications</h3>
-                    <p>WordPress plugins, Shopify themes, React component libraries, corporate website tools. The PPP Style System will power beautiful visuals across the entire web ecosystem.</p>
-                </div>
-                
-                <div class="content-card">
-                    <h3>🤖 AI Integration</h3>
-                    <p>Automatic mood detection from content, machine learning parameter optimization, predictive performance scaling, and smart preset recommendations will make the system even more intelligent.</p>
-                </div>
-                
-                <div class="content-card">
-                    <h3>🌐 Platform Expansion</h3>
-                    <p>React Native mobile support, Unity 3D integration, Unreal Engine plugins, and VR/AR compatibility will bring PPP visuals to every digital platform.</p>
-                </div>
-            </div>
-        </section>
-    </div>
-    
-    <!-- System Status Display -->
-    <div class="system-status">
-        <div class="status-row">
-            <span class="status-label">PPP System:</span>
-            <span class="status-value" id="systemStatus">Loading...</span>
         </div>
-        <div class="status-row">
-            <span class="status-label">Active Section:</span>
-            <span class="status-value" id="currentSection">Home</span>
+    </section>
+
+    <!-- Featured Article -->
+    <section class="section" data-section="articles">
+        <div class="container">
+            <div class="featured-article">
+                <div class="featured-image">
+                    📘
+                </div>
+                <div class="featured-content">
+                    <span class="featured-label">Featured Article</span>
+                    <h2 class="featured-title">The Digital Sovereignty Manifesto</h2>
+                    <p class="featured-excerpt">How Exoditical Moral Architecture is reshaping the landscape of ethical technology development and giving users true control over their digital lives.</p>
+                    <a href="#" class="btn btn-primary">Read Article</a>
+                </div>
+            </div>
         </div>
-        <div class="status-row">
-            <span class="status-label">Visualizers:</span>
-            <span class="status-value" id="visualizerCount">0</span>
+    </section>
+
+    <!-- Latest Articles -->
+    <section id="articles" class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Latest Articles</span>
+                <h2 class="section-title">Featured Content</h2>
+                <p class="section-description">Deep dives into EMA philosophy, technical implementation, and industry analysis.</p>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="category-nav">
+                <a href="#" class="category-tag active">All Articles</a>
+                <a href="#" class="category-tag">EMA Philosophy</a>
+                <a href="#" class="category-tag">Technical</a>
+                <a href="#" class="category-tag">Industry Analysis</a>
+                <a href="#" class="category-tag">Case Studies</a>
+            </div>
+
+            <!-- Article Grid -->
+            <div class="article-grid">
+                <!-- Article 1 -->
+                <article class="article-card">
+                    <div class="article-image">
+                        🔓
+                        <span class="article-category">EMA Philosophy</span>
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span>May 15, 2024</span>
+                            <span>•</span>
+                            <span>8 min read</span>
+                        </div>
+                        <h3 class="article-title">
+                            <a href="#">Understanding Data Portability in the Age of Vendor Lock-in</a>
+                        </h3>
+                        <p class="article-excerpt">
+                            Why true data portability is the cornerstone of digital freedom and how EMA principles ensure your content remains yours forever.
+                        </p>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <!-- Article 2 -->
+                <article class="article-card">
+                    <div class="article-image">
+                        ⚡
+                        <span class="article-category">Technical</span>
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span>May 12, 2024</span>
+                            <span>•</span>
+                            <span>12 min read</span>
+                        </div>
+                        <h3 class="article-title">
+                            <a href="#">Building EMA-Compliant APIs with Parserator</a>
+                        </h3>
+                        <p class="article-excerpt">
+                            A comprehensive guide to implementing data sovereignty principles in your API architecture using Parserator's unified parsing engine.
+                        </p>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <!-- Article 3 -->
+                <article class="article-card">
+                    <div class="article-image">
+                        📊
+                        <span class="article-category">Industry</span>
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span>May 10, 2024</span>
+                            <span>•</span>
+                            <span>6 min read</span>
+                        </div>
+                        <h3 class="article-title">
+                            <a href="#">The Wall of Openness: May 2024 Update</a>
+                        </h3>
+                        <p class="article-excerpt">
+                            Tracking how major tech companies score on data portability, export capabilities, and commitment to user sovereignty.
+                        </p>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <!-- Article 4 -->
+                <article class="article-card">
+                    <div class="article-image">
+                        🌐
+                        <span class="article-category">Case Study</span>
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span>May 8, 2024</span>
+                            <span>•</span>
+                            <span>10 min read</span>
+                        </div>
+                        <h3 class="article-title">
+                            <a href="#">How Company X Migrated from Proprietary to EMA-First Architecture</a>
+                        </h3>
+                        <p class="article-excerpt">
+                            A real-world case study of transitioning from vendor lock-in to digital sovereignty while maintaining business continuity.
+                        </p>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <!-- Article 5 -->
+                <article class="article-card">
+                    <div class="article-image">
+                        💡
+                        <span class="article-category">EMA Philosophy</span>
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span>May 5, 2024</span>
+                            <span>•</span>
+                            <span>7 min read</span>
+                        </div>
+                        <h3 class="article-title">
+                            <a href="#">The Three Pillars of Exoditical Moral Architecture</a>
+                        </h3>
+                        <p class="article-excerpt">
+                            Data sovereignty, export capability, and transparent competition form the foundation of ethical technology development.
+                        </p>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <!-- Article 6 -->
+                <article class="article-card">
+                    <div class="article-image">
+                        🚀
+                        <span class="article-category">Technical</span>
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span>May 3, 2024</span>
+                            <span>•</span>
+                            <span>15 min read</span>
+                        </div>
+                        <h3 class="article-title">
+                            <a href="#">Implementing One-Click Data Export: A Developer's Guide</a>
+                        </h3>
+                        <p class="article-excerpt">
+                            Step-by-step tutorial on building comprehensive data export functionality that respects user sovereignty and enables true portability.
+                        </p>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </article>
+            </div>
         </div>
-        <div class="status-row">
-            <span class="status-label">Master Geometry:</span>
-            <span class="status-value" id="masterGeometry">Hypercube</span>
+    </section>
+
+    <!-- Newsletter Signup -->
+    <section class="section">
+        <div class="container">
+            <div class="newsletter">
+                <h3>Join the EMA Movement</h3>
+                <p>Get weekly insights on digital sovereignty, ethical tech, and the future of data portability.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
         </div>
-    </div>
-    
+    </section>
+
     <!-- Footer -->
-    <footer class="footer" data-section="footer">
-        <div class="section-container">
-            <p>&copy; 2024 VIB3CODE - VIB34D Style System with Multi-Visualizer Styles Package</p>
-            <p>Built with ❤️ by Paul Phillips & Claude AI - Powered by Exoditical Moral Architecture</p>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>VIB3CODE</h4>
+                <p>Premium digital magazine establishing Exoditical Moral Architecture as the premier philosophy for ethical technology development.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Content</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Articles</a></li>
+                    <li><a href="#">EMA Philosophy</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                    <li><a href="#">Industry Analysis</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Parserator</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Community</a></li>
+                    <li><a href="#">Wall of Openness</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">GitHub</a></li>
+                    <li><a href="#">LinkedIn</a></li>
+                    <li><a href="#">Newsletter</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 VIB3CODE. Built with ❤️ for Digital Sovereignty. Powered by Exoditical Moral Architecture.</p>
         </div>
     </footer>
-    
-    <!-- VIB34D Configuration (EASY TO ADJUST!) -->
+
+    <!-- VIB34D Configuration - SUBTLE BACKGROUND MODE -->
     <script>
         window.VIB34DConfig = {
-            // ===== CORE VISUALIZER SETTINGS =====
-            visualizerCount: 1,  // Canvas consolidation - ONE canvas per section
-            visualizerRoles: ['unified'],
+            visualizerCount: 1,
             defaultGeometry: 'hypercube',
             defaultPreset: 'editorial',
-            enableCanvasConsolidation: true,  // Multi-geometry rendering
-            
-            // ===== INFINITE SCROLL SETTINGS =====
-            enableInfiniteScroll: false,  // Disabled to reduce complexity
-            portalEffectsEnabled: false,
-            defaultTransitionRule: 'smooth',
-            
-            // ===== CRYSTAL UI SETTINGS =====
-            enableCrystalUI: true,
-            crystalBackboneEnabled: true,
-            unifyAllSections: true,
-            
-            // ===== PERFORMANCE SETTINGS =====
+            enableCanvasConsolidation: true,
+
+            // SUBTLE BACKGROUND MODE
+            visualizerOpacity: 0.15,        // Very subtle
+            visualizerSpeed: 0.3,           // Slower animations
+            backgroundMode: true,           // Background enhancement only
+
+            enableCrystalUI: false,         // Disable for cleaner look
+            enableInfiniteScroll: false,
+            enableEditor: false,
+            debugMode: false,
+
             targetFPS: 60,
-            enableViewportOptimization: true,
-            
-            // ===== EDITOR SETTINGS =====
-            editorMode: false,    // Set to TRUE for editor controls
-            showControls: false,  // Set to TRUE to show parameter controls
-            debugMode: true,      // Set to TRUE for debug info (TEMPORARY)
-            enableEditor: false   // Disable editor interfaces completely
+            enableViewportOptimization: true
         };
     </script>
-    
-    <!-- VIB34D Style System - Complete Multi-Visualizer Framework -->
-    <script src="js/vib34d-core.js?v=20250621182000"></script>
-    <script src="js/vib34d-multi-instance.js?v=20250621182000"></script>
-    <script src="js/vib34d-home-master.js?v=20250621182000"></script>
-    <script src="js/vib34d-transition-engine.js?v=20250621182000"></script>
-    <!-- Infinite scroll disabled to reduce complexity
-    <script src="js/vib34d-infinite-scroll.js?v=20250621190000"></script> -->
-    <script src="js/crystal-ui-framework.js?v=20250621190000"></script>
-    <script src="js/vib34d-style-system.js?v=20250621190000"></script>
-    
-    <!-- Cache Clearing Debug -->
-    <script>
-        console.log('🆕 VIB3CODE VIB34D STYLE SYSTEM LOADED');
-        console.log('⏰ Load Time:', new Date().toLocaleTimeString());
-        console.log('🔍 URL:', window.location.href);
-        console.log('🎯 VIB34D Multi-Visualizer Styles Package Active!');
-    </script>
-    
+
+    <!-- VIB34D System (Subtle Background) -->
+    <script src="js/vib34d-core.js"></script>
+    <script src="js/vib34d-multi-instance.js"></script>
+    <script src="js/vib34d-home-master.js"></script>
+    <script src="js/vib34d-style-system.js"></script>
+
     <!-- Page Initialization -->
     <script>
-        // Enhanced page management
-        function initializeVIB3CODEPilot() {
-            console.log('🚀 VIB3CODE VIB34D System Initializing...');
-            
-            // Hide loading overlay immediately - VIB34D system handles its own initialization
-            document.getElementById('loading-overlay').classList.add('hidden');
-            
-            // Smooth scroll navigation
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             });
-            
-            // Section detection for status display
-            const sections = document.querySelectorAll('[data-section]');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const sectionName = entry.target.getAttribute('data-section');
-                        updateCurrentSection(sectionName);
-                    }
-                });
-            }, { threshold: 0.5 });
-            
-            sections.forEach(section => observer.observe(section));
-            
-            console.log('✅ VIB3CODE VIB34D System Ready!');
-        }
-        
-        function updateSystemStatus() {
-            document.getElementById('systemStatus').textContent = 'Active';
-            document.getElementById('systemStatus').style.color = '#00ff88';
-            
-            if (window.pppStyleSystem) {
-                const visualizerCount = window.pppStyleSystem.pageManagers.size * 4; // 4 variants per page
-                document.getElementById('visualizerCount').textContent = visualizerCount;
-                document.getElementById('masterGeometry').textContent = 
-                    window.pppStyleSystem.masterParameters.geometry;
-            }
-        }
-        
-        function updateCurrentSection(sectionName) {
-            const sectionNames = {
-                'home': 'Home',
-                'articles': 'About PPP',
-                'videos': 'Features',
-                'community': 'Live Demo',
-                'ema': 'Future Vision',
-                'footer': 'Footer'
-            };
-            
-            document.getElementById('currentSection').textContent = 
-                sectionNames[sectionName] || sectionName;
-        }
-        
-        // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeVIB3CODEPilot);
-        } else {
-            initializeVIB3CODEPilot();
-        }
+        });
+
+        // Category filter
+        document.querySelectorAll('.category-tag').forEach(tag => {
+            tag.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Newsletter form
+        document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for subscribing! Welcome to the EMA movement.');
+            this.reset();
+        });
+
+        console.log('🎨 VIB3CODE Digital Magazine Loaded');
+        console.log('📝 Professional blog with subtle visualizer enhancements');
     </script>
 </body>
 </html>
