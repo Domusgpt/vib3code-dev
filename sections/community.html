@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community - VIB3CODE Digital Magazine</title>
+    <meta name="description" content="Join the VIB3CODE community and the EMA movement">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+Pro:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/article-style.css">
+
+    <style>
+        /* Community Section Styles */
+        .community-hero {
+            min-height: 60vh;
+            padding: 8rem 2rem 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(233, 69, 96, 0.2) 0%, rgba(26, 26, 46, 0) 100%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .community-hero h1 {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #e94560 0%, #00ff88 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .community-hero p {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            color: var(--color-text);
+            margin-bottom: 3rem;
+        }
+
+        .coming-soon-badge {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: rgba(233, 69, 96, 0.2);
+            border: 2px solid var(--color-accent);
+            border-radius: 100px;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-accent);
+            margin-bottom: 2rem;
+        }
+
+        .feature-grid {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--color-accent);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--color-wisdom);
+        }
+
+        .feature-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--color-text-muted);
+        }
+
+        .cta-section {
+            max-width: 600px;
+            margin: 4rem auto 6rem;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--color-wisdom);
+        }
+
+        .cta-section p {
+            font-size: 1.125rem;
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .email-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .email-input {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--color-text);
+            font-family: var(--font-sans);
+            font-size: 1rem;
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        .submit-btn {
+            padding: 1rem 2rem;
+            background: var(--color-accent);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #d63850;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .community-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .email-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- VIB34D Configuration -->
+    <script>
+        window.VIB34DConfig = {
+            visualizerCount: 1,
+            visualizerRoles: ['unified'],
+            defaultGeometry: 'wave',
+            defaultPreset: 'editorial',
+            enableCanvasConsolidation: true,
+            visualizerOpacity: 0.12,
+            visualizerSpeed: 0.3,
+            backgroundMode: true,
+            enableCrystalUI: false,
+            targetFPS: 60,
+            enableViewportOptimization: true,
+            debugMode: false
+        };
+    </script>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="../index.html" class="logo">VIB3CODE</a>
+            <div class="nav-links">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="articles.html" class="nav-link">Articles</a>
+                <a href="video.html" class="nav-link">Video</a>
+                <a href="audio.html" class="nav-link">Audio</a>
+                <a href="community.html" class="nav-link active">Community</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="community-hero" data-section="community">
+        <div class="hero-content">
+            <div class="coming-soon-badge">Coming Soon</div>
+            <h1>Community</h1>
+            <p>Join the conversation about digital sovereignty, ethical technology, and the future of the open web.</p>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="feature-grid">
+        <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <h3 class="feature-title">Discussion Forums</h3>
+            <p class="feature-description">Connect with developers, technologists, and EMA advocates from around the world.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">👥</div>
+            <h3 class="feature-title">User Profiles</h3>
+            <p class="feature-description">Create your profile, share your work, and build your reputation in the EMA community.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <h3 class="feature-title">Submit Content</h3>
+            <p class="feature-description">Contribute articles, case studies, and tutorials to the VIB3CODE magazine.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3 class="feature-title">Events & Workshops</h3>
+            <p class="feature-description">Attend virtual events, workshops, and hackathons focused on ethical technology.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🏆</div>
+            <h3 class="feature-title">Contributor Recognition</h3>
+            <p class="feature-description">Gain recognition for your contributions and advance through community tiers.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🤝</div>
+            <h3 class="feature-title">Collaboration</h3>
+            <p class="feature-description">Find collaborators for EMA-compliant projects and open-source initiatives.</p>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Get Early Access</h2>
+        <p>Be the first to know when community features launch. Join our newsletter for updates.</p>
+        <form class="email-form" onsubmit="event.preventDefault(); alert('Thank you for your interest! Community features launching soon.');">
+            <input
+                type="email"
+                class="email-input"
+                placeholder="your@email.com"
+                required
+                aria-label="Email address"
+            >
+            <button type="submit" class="submit-btn">Notify Me</button>
+        </form>
+    </section>
+
+    <!-- VIB34D System Scripts -->
+    <script src="../js/vib34d-core.js"></script>
+    <script src="../js/vib34d-multi-instance.js"></script>
+    <script src="../js/vib34d-home-master.js"></script>
+    <script src="../js/vib34d-transition-engine.js"></script>
+    <script src="../js/vib34d-style-system.js"></script>
+</body>
+</html>
