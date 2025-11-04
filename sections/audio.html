@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio - VIB3CODE Digital Magazine</title>
+    <meta name="description" content="Podcasts and audio conversations on digital sovereignty and EMA philosophy">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+Pro:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/article-style.css">
+
+    <style>
+        /* Audio Section Specific Styles */
+        .audio-hero {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(0, 255, 136, 0.2) 0%, rgba(26, 26, 46, 0) 100%);
+        }
+
+        .audio-hero h1 {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #00ff88 0%, #0f3460 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .audio-hero p {
+            font-size: 1.25rem;
+            color: var(--color-text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Controls */
+        .controls-section {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--color-text);
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #00ff88;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-muted);
+        }
+
+        .sort-select {
+            padding: 1rem 2.5rem 1rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--color-text);
+            font-family: var(--font-sans);
+            cursor: pointer;
+        }
+
+        /* Category Filters */
+        .category-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .category-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            color: var(--color-text);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+
+        .category-btn.active {
+            background: #00ff88;
+            border-color: #00ff88;
+            color: #000;
+        }
+
+        /* Audio Grid */
+        .audio-grid {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .audio-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .audio-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #00ff88;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .audio-thumbnail {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(15, 52, 96, 0.3));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            aspect-ratio: 1;
+        }
+
+        .audio-content {
+            padding: 1.5rem 1.5rem 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .audio-header {
+            margin-bottom: 1rem;
+        }
+
+        .audio-meta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .category-badge {
+            padding: 0.25rem 0.75rem;
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid #00ff88;
+            border-radius: 100px;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .episode-number {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            color: #00ff88;
+        }
+
+        .audio-duration {
+            font-family: var(--font-sans);
+        }
+
+        .audio-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
+            color: var(--color-wisdom);
+        }
+
+        .audio-excerpt {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--color-text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .audio-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00ff88, var(--color-bridge));
+        }
+
+        .author-name {
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .engagement-stats {
+            display: flex;
+            gap: 1rem;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Subscribe Section */
+        .subscribe-section {
+            max-width: 900px;
+            margin: 0 auto 4rem;
+            padding: 0 2rem;
+        }
+
+        .subscribe-card {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .subscribe-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            color: #00ff88;
+        }
+
+        .subscribe-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .subscribe-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--color-text);
+            font-family: var(--font-sans);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .subscribe-btn:hover {
+            background: #00ff88;
+            border-color: #00ff88;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--color-text-muted);
+        }
+
+        .empty-state h3 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--color-text);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem 2rem;
+            font-family: var(--font-sans);
+            color: var(--color-text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .audio-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .audio-card {
+                grid-template-columns: 1fr;
+            }
+
+            .audio-thumbnail {
+                height: 200px;
+            }
+
+            .audio-content {
+                padding: 1.5rem;
+            }
+
+            .subscribe-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- VIB34D Configuration -->
+    <script>
+        window.VIB34DConfig = {
+            visualizerCount: 1,
+            visualizerRoles: ['unified'],
+            defaultGeometry: 'torus',
+            defaultPreset: 'editorial',
+            enableCanvasConsolidation: true,
+            visualizerOpacity: 0.12,
+            visualizerSpeed: 0.35,
+            backgroundMode: true,
+            enableCrystalUI: false,
+            targetFPS: 60,
+            enableViewportOptimization: true,
+            debugMode: false
+        };
+    </script>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="../index.html" class="logo">VIB3CODE</a>
+            <div class="nav-links">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="articles.html" class="nav-link">Articles</a>
+                <a href="video.html" class="nav-link">Video</a>
+                <a href="audio.html" class="nav-link active">Audio</a>
+                <a href="community.html" class="nav-link">Community</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="audio-hero" data-section="audio">
+        <h1>Audio</h1>
+        <p>Deep conversations on digital sovereignty, ethical technology, and the EMA movement</p>
+    </section>
+
+    <!-- Subscribe Section -->
+    <section class="subscribe-section">
+        <div class="subscribe-card">
+            <h3>Subscribe to Digital Liberation</h3>
+            <p style="color: var(--color-text-muted); margin-bottom: 0;">
+                Get new episodes delivered to your favorite podcast platform
+            </p>
+            <div class="subscribe-buttons">
+                <a href="#" class="subscribe-btn">🎙️ RSS Feed</a>
+                <a href="#" class="subscribe-btn">🟢 Spotify</a>
+                <a href="#" class="subscribe-btn">🍎 Apple Podcasts</a>
+                <a href="#" class="subscribe-btn">📻 Google Podcasts</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Controls Section -->
+    <section class="controls-section">
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <div class="search-input-wrapper">
+                <span class="search-icon">🔍</span>
+                <input
+                    type="text"
+                    class="search-input"
+                    id="searchInput"
+                    placeholder="Search episodes..."
+                    aria-label="Search episodes"
+                >
+            </div>
+            <select class="sort-select" id="sortSelect" aria-label="Sort episodes">
+                <option value="newest">Newest First</option>
+                <option value="popular">Most Popular</option>
+                <option value="duration">Duration</option>
+            </select>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="category-filters">
+            <button class="category-btn active" data-category="all">All Episodes</button>
+            <button class="category-btn" data-category="podcast">Podcast</button>
+            <button class="category-btn" data-category="interview">Interviews</button>
+            <button class="category-btn" data-category="discussion">Discussions</button>
+        </div>
+    </section>
+
+    <!-- Audio Grid -->
+    <section class="audio-grid" id="audioGrid">
+        <div class="loading">
+            <p>Loading episodes...</p>
+        </div>
+    </section>
+
+    <!-- VIB34D System Scripts -->
+    <script src="../js/vib34d-core.js"></script>
+    <script src="../js/vib34d-multi-instance.js"></script>
+    <script src="../js/vib34d-home-master.js"></script>
+    <script src="../js/vib34d-transition-engine.js"></script>
+    <script src="../js/vib34d-style-system.js"></script>
+
+    <!-- Audio System Script -->
+    <script>
+        const AudioApp = {
+            audioContent: [],
+            users: {},
+            filteredAudio: [],
+            currentCategory: 'all',
+            currentSort: 'newest',
+            searchQuery: '',
+
+            async init() {
+                await this.loadData();
+                this.setupEventListeners();
+                this.renderAudio();
+            },
+
+            async loadData() {
+                try {
+                    const contentResponse = await fetch('../data/content.json');
+                    const contentData = await contentResponse.json();
+                    this.audioContent = contentData.audio || [];
+
+                    const usersResponse = await fetch('../data/users.json');
+                    const usersData = await usersResponse.json();
+                    this.users = {};
+                    usersData.users.forEach(user => {
+                        this.users[user.id] = user;
+                    });
+
+                    this.filteredAudio = [...this.audioContent];
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    document.getElementById('audioGrid').innerHTML = `
+                        <div class="empty-state">
+                            <h3>Error Loading Episodes</h3>
+                            <p>Unable to load content. Please try again later.</p>
+                        </div>
+                    `;
+                }
+            },
+
+            setupEventListeners() {
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentCategory = e.target.dataset.category;
+                        this.filterAndSort();
+                    });
+                });
+
+                document.getElementById('sortSelect').addEventListener('change', (e) => {
+                    this.currentSort = e.target.value;
+                    this.filterAndSort();
+                });
+
+                document.getElementById('searchInput').addEventListener('input', (e) => {
+                    this.searchQuery = e.target.value.toLowerCase();
+                    this.filterAndSort();
+                });
+            },
+
+            filterAndSort() {
+                let filtered = this.audioContent;
+
+                if (this.currentCategory !== 'all') {
+                    filtered = filtered.filter(audio => audio.category === this.currentCategory);
+                }
+
+                if (this.searchQuery) {
+                    filtered = filtered.filter(audio =>
+                        audio.title.toLowerCase().includes(this.searchQuery) ||
+                        audio.excerpt.toLowerCase().includes(this.searchQuery)
+                    );
+                }
+
+                filtered = [...filtered];
+                switch (this.currentSort) {
+                    case 'newest':
+                        filtered.sort((a, b) => new Date(b.metadata.published_at) - new Date(a.metadata.published_at));
+                        break;
+                    case 'popular':
+                        filtered.sort((a, b) => (b.engagement?.listen_count || 0) - (a.engagement?.listen_count || 0));
+                        break;
+                    case 'duration':
+                        filtered.sort((a, b) => (a.media.duration || 0) - (b.media.duration || 0));
+                        break;
+                }
+
+                this.filteredAudio = filtered;
+                this.renderAudio();
+            },
+
+            renderAudio() {
+                const grid = document.getElementById('audioGrid');
+
+                if (this.filteredAudio.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No Episodes Found</h3>
+                            <p>Try adjusting your filters or search query.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = this.filteredAudio.map((audio, index) => {
+                    const author = this.users[audio.author_id];
+                    const categoryLabel = this.getCategoryLabel(audio.category);
+                    const duration = this.formatDuration(audio.media.duration);
+                    const episodeNum = this.audioContent.length - index;
+
+                    return `
+                        <a href="${audio.url}" class="audio-card">
+                            <div class="audio-thumbnail">
+                                ${audio.media.thumbnail}
+                            </div>
+                            <div class="audio-content">
+                                <div class="audio-header">
+                                    <div class="audio-meta">
+                                        <span class="category-badge">${categoryLabel}</span>
+                                        <span class="episode-number">Episode ${episodeNum}</span>
+                                        <span class="audio-duration">${duration}</span>
+                                    </div>
+                                    <h2 class="audio-title">${audio.title}</h2>
+                                    <p class="audio-excerpt">${audio.excerpt}</p>
+                                </div>
+                                <div class="audio-footer">
+                                    <div class="author-info">
+                                        <img src="${author?.profile.avatar_url || ''}" alt="${author?.profile.display_name || 'Host'}" class="author-avatar" onerror="this.style.display='none'">
+                                        <span class="author-name">${author?.profile.display_name || 'VIB3CODE'}</span>
+                                    </div>
+                                    <div class="engagement-stats">
+                                        <span class="stat-item">🎧 ${this.formatNumber(audio.engagement?.listen_count || 0)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            },
+
+            getCategoryLabel(category) {
+                const labels = {
+                    'podcast': 'Podcast',
+                    'interview': 'Interview',
+                    'discussion': 'Discussion'
+                };
+                return labels[category] || category;
+            },
+
+            formatDuration(seconds) {
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                if (hours > 0) {
+                    return `${hours}h ${minutes}m`;
+                }
+                return `${minutes} min`;
+            },
+
+            formatNumber(num) {
+                if (num >= 1000) {
+                    return (num / 1000).toFixed(1) + 'k';
+                }
+                return num.toString();
+            }
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => AudioApp.init());
+        } else {
+            AudioApp.init();
+        }
+    </script>
+</body>
+</html>

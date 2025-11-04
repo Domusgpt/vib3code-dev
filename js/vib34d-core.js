@@ -13,16 +13,21 @@ class VIB34DCore {
     constructor(canvas, options = {}) {
         this.canvas = canvas;
         this.gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        
+
         if (!this.gl) {
             console.error('WebGL not supported for VIB34D Core');
             return;
         }
-        
+
         // Instance configuration
         this.instanceId = options.instanceId || `vib34d-${Date.now()}`;
         this.instanceRole = options.role || 'background'; // 'header', 'content', 'background', etc.
         this.parameterModifier = options.modifier || 1.0; // Instance variation (1.0, 1.3, 0.7, etc.)
+
+        // Subtle background mode support
+        this.backgroundMode = options.backgroundMode || window.VIB34DConfig?.backgroundMode || false;
+        this.visualizerOpacity = options.opacity || window.VIB34DConfig?.visualizerOpacity || 1.0;
+        this.visualizerSpeed = options.speed || window.VIB34DConfig?.visualizerSpeed || 1.0;
         
         // Core state (EXACT from working demo)
         this.startTime = Date.now();
@@ -458,40 +463,53 @@ class VIB34DCore {
     
     render() {
         if (!this.program || !this.isActive) return;
-        
+
         this.resize();
         this.gl.useProgram(this.program);
-        
-        const time = (Date.now() - this.startTime) / 1000;
-        
+
+        const time = (Date.now() - this.startTime) / 1000 * this.visualizerSpeed;
+
         // Geometry mapping
-        const geometryMap = { 
-            hypercube: 0, tetrahedron: 1, sphere: 2, torus: 3, 
-            klein: 4, fractal: 5, wave: 6, crystal: 7 
+        const geometryMap = {
+            hypercube: 0, tetrahedron: 1, sphere: 2, torus: 3,
+            klein: 4, fractal: 5, wave: 6, crystal: 7
         };
-        
+
+        // Apply background mode adjustments
+        let gridDensity = this.params.gridDensity;
+        let glitchIntensity = this.params.glitchIntensity;
+        let interactionIntensity = this.interactionState.intensity;
+
+        if (this.backgroundMode) {
+            // Reduce visual intensity for background mode
+            gridDensity *= 0.6;
+            glitchIntensity *= 0.3;
+            interactionIntensity *= 0.2;
+        }
+
         // Set uniforms
         this.gl.uniform2f(this.uniforms.resolution, this.canvas.width, this.canvas.height);
         this.gl.uniform1f(this.uniforms.time, time);
         this.gl.uniform2f(this.uniforms.mouse, this.interactionState.mouseX, this.interactionState.mouseY);
         this.gl.uniform1f(this.uniforms.morphFactor, this.params.morphFactor);
-        this.gl.uniform1f(this.uniforms.glitchIntensity, this.params.glitchIntensity);
-        this.gl.uniform1f(this.uniforms.rotationSpeed, this.params.rotationSpeed);
+        this.gl.uniform1f(this.uniforms.glitchIntensity, glitchIntensity);
+        this.gl.uniform1f(this.uniforms.rotationSpeed, this.params.rotationSpeed * this.visualizerSpeed);
         this.gl.uniform1f(this.uniforms.dimension, this.params.dimension);
-        this.gl.uniform1f(this.uniforms.gridDensity, this.params.gridDensity);
+        this.gl.uniform1f(this.uniforms.gridDensity, gridDensity);
         this.gl.uniform3fv(this.uniforms.baseColor, new Float32Array(this.params.baseColor || [1.0, 0.0, 1.0]));
-        this.gl.uniform1f(this.uniforms.interactionIntensity, this.interactionState.intensity);
+        this.gl.uniform1f(this.uniforms.interactionIntensity, interactionIntensity);
         this.gl.uniform1f(this.uniforms.geometry, geometryMap[this.currentTheme] || 0);
-        
+
         // Update variations if multi-geometry mode
         if (this.multiGeometry && this.geometryVariations.length > 0) {
             this.updateVariationUniforms();
         }
-        
+
         this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, 4);
-        
-        // Decay interaction intensity
-        this.interactionState.intensity *= 0.95;
+
+        // Decay interaction intensity (slower in background mode)
+        const decayRate = this.backgroundMode ? 0.98 : 0.95;
+        this.interactionState.intensity *= decayRate;
     }
     
     start() {

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articles - VIB3CODE Digital Magazine</title>
+    <meta name="description" content="In-depth articles on digital sovereignty, EMA philosophy, and ethical technology development">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+Pro:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/article-style.css">
+
+    <style>
+        /* Articles Section Specific Styles */
+        .articles-hero {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(15, 52, 96, 0.3) 0%, rgba(26, 26, 46, 0) 100%);
+        }
+
+        .articles-hero h1 {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #e94560 0%, #0f3460 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .articles-hero p {
+            font-size: 1.25rem;
+            color: var(--color-text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Filter & Search Bar */
+        .controls-section {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--color-text);
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-muted);
+        }
+
+        .sort-select {
+            padding: 1rem 2.5rem 1rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--color-text);
+            font-family: var(--font-sans);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sort-select:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Category Filters */
+        .category-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .category-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            color: var(--color-text);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover {
+            background: rgba(233, 69, 96, 0.2);
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .category-btn.active {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            color: white;
+        }
+
+        /* Articles Grid */
+        .articles-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .article-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--color-accent);
+            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.2);
+        }
+
+        .article-icon {
+            font-size: 4rem;
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(15, 52, 96, 0.3), rgba(233, 69, 96, 0.2));
+        }
+
+        .article-content {
+            padding: 1.5rem;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .category-badge {
+            padding: 0.25rem 0.75rem;
+            background: rgba(233, 69, 96, 0.2);
+            border: 1px solid var(--color-accent);
+            border-radius: 100px;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .read-time {
+            font-family: var(--font-sans);
+        }
+
+        .article-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
+            color: var(--color-wisdom);
+        }
+
+        .article-excerpt {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--color-text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-bridge));
+        }
+
+        .author-name {
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .engagement-stats {
+            display: flex;
+            gap: 1rem;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--color-text-muted);
+        }
+
+        .empty-state h3 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--color-text);
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 4rem 2rem;
+            font-family: var(--font-sans);
+            color: var(--color-text-muted);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 3rem 2rem;
+        }
+
+        .page-btn {
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--color-text);
+            font-family: var(--font-sans);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover {
+            background: rgba(233, 69, 96, 0.2);
+            border-color: var(--color-accent);
+        }
+
+        .page-btn.active {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            color: white;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .articles-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .articles-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .controls-section {
+                padding: 1rem;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- VIB34D Configuration -->
+    <script>
+        window.VIB34DConfig = {
+            visualizerCount: 1,
+            visualizerRoles: ['unified'],
+            defaultGeometry: 'tetrahedron',
+            defaultPreset: 'editorial',
+            enableCanvasConsolidation: true,
+            visualizerOpacity: 0.12,
+            visualizerSpeed: 0.3,
+            backgroundMode: true,
+            enableCrystalUI: false,
+            targetFPS: 60,
+            enableViewportOptimization: true,
+            debugMode: false
+        };
+    </script>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="../index.html" class="logo">VIB3CODE</a>
+            <div class="nav-links">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="articles.html" class="nav-link active">Articles</a>
+                <a href="video.html" class="nav-link">Video</a>
+                <a href="audio.html" class="nav-link">Audio</a>
+                <a href="community.html" class="nav-link">Community</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="articles-hero" data-section="articles">
+        <h1>Articles</h1>
+        <p>In-depth explorations of digital sovereignty, EMA philosophy, and the future of ethical technology</p>
+    </section>
+
+    <!-- Controls Section -->
+    <section class="controls-section">
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <div class="search-input-wrapper">
+                <span class="search-icon">🔍</span>
+                <input
+                    type="text"
+                    class="search-input"
+                    id="searchInput"
+                    placeholder="Search articles..."
+                    aria-label="Search articles"
+                >
+            </div>
+            <select class="sort-select" id="sortSelect" aria-label="Sort articles">
+                <option value="newest">Newest First</option>
+                <option value="popular">Most Popular</option>
+                <option value="trending">Trending</option>
+                <option value="read-time">Read Time</option>
+            </select>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="category-filters">
+            <button class="category-btn active" data-category="all">All Articles</button>
+            <button class="category-btn" data-category="ema-philosophy">EMA Philosophy</button>
+            <button class="category-btn" data-category="technical">Technical</button>
+            <button class="category-btn" data-category="industry">Industry Analysis</button>
+            <button class="category-btn" data-category="case-study">Case Studies</button>
+        </div>
+    </section>
+
+    <!-- Articles Grid -->
+    <section class="articles-grid" id="articlesGrid">
+        <div class="loading">
+            <p>Loading articles...</p>
+        </div>
+    </section>
+
+    <!-- Pagination -->
+    <section class="pagination" id="pagination" style="display: none;">
+        <button class="page-btn" id="prevPage" disabled>← Previous</button>
+        <span id="pageNumbers"></span>
+        <button class="page-btn" id="nextPage">Next →</button>
+    </section>
+
+    <!-- VIB34D System Scripts -->
+    <script src="../js/vib34d-core.js"></script>
+    <script src="../js/vib34d-multi-instance.js"></script>
+    <script src="../js/vib34d-home-master.js"></script>
+    <script src="../js/vib34d-transition-engine.js"></script>
+    <script src="../js/vib34d-style-system.js"></script>
+
+    <!-- Articles System Script -->
+    <script>
+        // Articles Data and State Management
+        const ArticlesApp = {
+            articles: [],
+            users: {},
+            filteredArticles: [],
+            currentPage: 1,
+            articlesPerPage: 9,
+            currentCategory: 'all',
+            currentSort: 'newest',
+            searchQuery: '',
+
+            async init() {
+                await this.loadData();
+                this.setupEventListeners();
+                this.renderArticles();
+            },
+
+            async loadData() {
+                try {
+                    // Load content data
+                    const contentResponse = await fetch('../data/content.json');
+                    const contentData = await contentResponse.json();
+                    this.articles = contentData.articles || [];
+
+                    // Load user data
+                    const usersResponse = await fetch('../data/users.json');
+                    const usersData = await usersResponse.json();
+                    this.users = {};
+                    usersData.users.forEach(user => {
+                        this.users[user.id] = user;
+                    });
+
+                    this.filteredArticles = [...this.articles];
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    document.getElementById('articlesGrid').innerHTML = `
+                        <div class="empty-state">
+                            <h3>Error Loading Articles</h3>
+                            <p>Unable to load content. Please try again later.</p>
+                        </div>
+                    `;
+                }
+            },
+
+            setupEventListeners() {
+                // Category filters
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentCategory = e.target.dataset.category;
+                        this.currentPage = 1;
+                        this.filterAndSort();
+                    });
+                });
+
+                // Sort select
+                document.getElementById('sortSelect').addEventListener('change', (e) => {
+                    this.currentSort = e.target.value;
+                    this.currentPage = 1;
+                    this.filterAndSort();
+                });
+
+                // Search input
+                document.getElementById('searchInput').addEventListener('input', (e) => {
+                    this.searchQuery = e.target.value.toLowerCase();
+                    this.currentPage = 1;
+                    this.filterAndSort();
+                });
+
+                // Pagination
+                document.getElementById('prevPage').addEventListener('click', () => {
+                    if (this.currentPage > 1) {
+                        this.currentPage--;
+                        this.renderArticles();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+
+                document.getElementById('nextPage').addEventListener('click', () => {
+                    const totalPages = Math.ceil(this.filteredArticles.length / this.articlesPerPage);
+                    if (this.currentPage < totalPages) {
+                        this.currentPage++;
+                        this.renderArticles();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+            },
+
+            filterAndSort() {
+                // Filter by category
+                let filtered = this.articles;
+                if (this.currentCategory !== 'all') {
+                    filtered = filtered.filter(article => article.category === this.currentCategory);
+                }
+
+                // Filter by search query
+                if (this.searchQuery) {
+                    filtered = filtered.filter(article =>
+                        article.title.toLowerCase().includes(this.searchQuery) ||
+                        article.excerpt.toLowerCase().includes(this.searchQuery)
+                    );
+                }
+
+                // Sort
+                filtered = [...filtered];
+                switch (this.currentSort) {
+                    case 'newest':
+                        filtered.sort((a, b) => new Date(b.metadata.published_at) - new Date(a.metadata.published_at));
+                        break;
+                    case 'popular':
+                        filtered.sort((a, b) => (b.engagement?.view_count || 0) - (a.engagement?.view_count || 0));
+                        break;
+                    case 'trending':
+                        filtered.sort((a, b) => (b.engagement?.share_count || 0) - (a.engagement?.share_count || 0));
+                        break;
+                    case 'read-time':
+                        filtered.sort((a, b) => (a.metadata.read_time || 0) - (b.metadata.read_time || 0));
+                        break;
+                }
+
+                this.filteredArticles = filtered;
+                this.renderArticles();
+            },
+
+            renderArticles() {
+                const grid = document.getElementById('articlesGrid');
+                const totalPages = Math.ceil(this.filteredArticles.length / this.articlesPerPage);
+
+                // Calculate pagination
+                const startIndex = (this.currentPage - 1) * this.articlesPerPage;
+                const endIndex = startIndex + this.articlesPerPage;
+                const articlesToShow = this.filteredArticles.slice(startIndex, endIndex);
+
+                // Empty state
+                if (articlesToShow.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No Articles Found</h3>
+                            <p>Try adjusting your filters or search query.</p>
+                        </div>
+                    `;
+                    document.getElementById('pagination').style.display = 'none';
+                    return;
+                }
+
+                // Render articles
+                grid.innerHTML = articlesToShow.map(article => {
+                    const author = this.users[article.author_id];
+                    const categoryLabel = this.getCategoryLabel(article.category);
+
+                    return `
+                        <a href="../${article.url}" class="article-card">
+                            <div class="article-icon">${article.featured_image}</div>
+                            <div class="article-content">
+                                <div class="article-meta">
+                                    <span class="category-badge">${categoryLabel}</span>
+                                    <span class="read-time">${article.metadata.read_time} min read</span>
+                                </div>
+                                <h2 class="article-title">${article.title}</h2>
+                                <p class="article-excerpt">${article.excerpt}</p>
+                                <div class="article-footer">
+                                    <div class="author-info">
+                                        <img src="${author?.profile.avatar_url || ''}" alt="${author?.profile.display_name || 'Author'}" class="author-avatar" onerror="this.style.display='none'">
+                                        <span class="author-name">${author?.profile.display_name || 'VIB3CODE'}</span>
+                                    </div>
+                                    <div class="engagement-stats">
+                                        <span class="stat-item">👁️ ${this.formatNumber(article.engagement?.view_count || 0)}</span>
+                                        <span class="stat-item">💬 ${article.engagement?.comment_count || 0}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+
+                // Update pagination
+                this.updatePagination(totalPages);
+            },
+
+            updatePagination(totalPages) {
+                const pagination = document.getElementById('pagination');
+                const prevBtn = document.getElementById('prevPage');
+                const nextBtn = document.getElementById('nextPage');
+                const pageNumbers = document.getElementById('pageNumbers');
+
+                if (totalPages <= 1) {
+                    pagination.style.display = 'none';
+                    return;
+                }
+
+                pagination.style.display = 'flex';
+                prevBtn.disabled = this.currentPage === 1;
+                nextBtn.disabled = this.currentPage === totalPages;
+
+                // Generate page numbers
+                let pages = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === this.currentPage) {
+                        pages += `<button class="page-btn active">${i}</button>`;
+                    } else if (i === 1 || i === totalPages || Math.abs(i - this.currentPage) <= 1) {
+                        pages += `<button class="page-btn" onclick="ArticlesApp.goToPage(${i})">${i}</button>`;
+                    } else if (Math.abs(i - this.currentPage) === 2) {
+                        pages += `<span style="padding: 0.75rem 0.5rem; color: var(--color-text-muted);">...</span>`;
+                    }
+                }
+                pageNumbers.innerHTML = pages;
+            },
+
+            goToPage(page) {
+                this.currentPage = page;
+                this.renderArticles();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
+            getCategoryLabel(category) {
+                const labels = {
+                    'ema-philosophy': 'EMA Philosophy',
+                    'technical': 'Technical',
+                    'industry': 'Industry',
+                    'case-study': 'Case Study'
+                };
+                return labels[category] || category;
+            },
+
+            formatNumber(num) {
+                if (num >= 1000) {
+                    return (num / 1000).toFixed(1) + 'k';
+                }
+                return num.toString();
+            }
+        };
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => ArticlesApp.init());
+        } else {
+            ArticlesApp.init();
+        }
+    </script>
+</body>
+</html>

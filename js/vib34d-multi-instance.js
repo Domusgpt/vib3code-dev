@@ -64,7 +64,10 @@ class VIB34DMultiInstance {
         // Ensure section has relative positioning
         this.sectionElement.style.position = 'relative';
         this.sectionElement.style.overflow = 'hidden';
-        
+
+        // Get opacity from config
+        const opacity = window.VIB34DConfig?.visualizerOpacity || 1.0;
+
         // Create SINGLE canvas for all geometry variations
         this.canvas = document.createElement('canvas');
         this.canvas.className = `vib34d-canvas vib34d-${this.sectionKey}`;
@@ -77,16 +80,17 @@ class VIB34DMultiInstance {
             height: 100%;
             pointer-events: none;
             z-index: 1;
+            opacity: ${opacity};
         `;
-        
+
         // Size canvas
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
-        
+
         // Insert at beginning
         this.sectionElement.insertBefore(this.canvas, this.sectionElement.firstChild);
-        
-        console.log(`📦 Consolidated canvas created for ${this.sectionKey}`);
+
+        console.log(`📦 Consolidated canvas created for ${this.sectionKey} (opacity: ${opacity})`);
     }
     
     initializeRenderer() {
