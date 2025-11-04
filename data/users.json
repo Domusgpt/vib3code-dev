@@ -1,0 +1,103 @@
+{
+  "users": [
+    {
+      "id": "usr-sarah-chen",
+      "username": "sarahchen",
+      "email": "sarah.chen@vib3code.com",
+      "role": "journalist",
+      "profile": {
+        "display_name": "Sarah Chen",
+        "bio": "Senior Tech Policy Analyst focusing on digital rights and platform governance. Former EFF researcher. PhD in Information Ethics from Stanford.",
+        "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+        "location": "San Francisco, CA",
+        "website": "https://sarahchen.tech",
+        "social": {
+          "twitter": "@sarahchen_tech",
+          "linkedin": "sarahchen"
+        }
+      },
+      "metadata": {
+        "joined_at": "2024-01-15T00:00:00Z",
+        "last_active": "2024-10-24T14:23:00Z",
+        "verified": true,
+        "email_verified": true
+      },
+      "stats": {
+        "articles_written": 12,
+        "comments_made": 45,
+        "followers": 342,
+        "following": 78
+      }
+    },
+    {
+      "id": "usr-marcus-rodriguez",
+      "username": "marcusdev",
+      "email": "marcus@vib3code.com",
+      "role": "journalist",
+      "profile": {
+        "display_name": "Marcus Rodriguez",
+        "bio": "Full-stack developer and technical writer. Building EMA-compliant tools and writing about them. Previously at Stripe and Cloudflare.",
+        "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus",
+        "location": "Austin, TX",
+        "social": {
+          "twitter": "@marcusdev",
+          "github": "marcus-codes"
+        }
+      },
+      "metadata": {
+        "joined_at": "2024-02-01T00:00:00Z",
+        "verified": true
+      },
+      "stats": {
+        "articles_written": 8,
+        "followers": 234
+      }
+    },
+    {
+      "id": "usr-alex-kim",
+      "username": "alexkim",
+      "email": "alex@vib3code.com",
+      "role": "editor",
+      "profile": {
+        "display_name": "Alex Kim",
+        "bio": "Video producer and editor. Creating visual essays about technology ethics and digital sovereignty.",
+        "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
+        "location": "Los Angeles, CA"
+      },
+      "metadata": {
+        "joined_at": "2024-01-20T00:00:00Z",
+        "verified": true
+      },
+      "stats": {
+        "videos_created": 5,
+        "followers": 567
+      }
+    },
+    {
+      "id": "usr-paul-phillips",
+      "username": "paulphillips",
+      "email": "paul@vib3code.com",
+      "role": "admin",
+      "profile": {
+        "display_name": "Paul Phillips",
+        "bio": "Founder & Editor-in-Chief of VIB3CODE. Creator of Parserator. Advocate for Exoditical Moral Architecture.",
+        "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=Paul",
+        "location": "Seattle, WA",
+        "website": "https://parserator.com",
+        "social": {
+          "twitter": "@parserator",
+          "github": "paulphillips"
+        }
+      },
+      "metadata": {
+        "joined_at": "2024-01-01T00:00:00Z",
+        "verified": true
+      },
+      "stats": {
+        "articles_written": 15,
+        "podcasts_hosted": 8,
+        "followers": 1234
+      }
+    }
+  ]
+}

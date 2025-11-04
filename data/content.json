@@ -1,0 +1,115 @@
+{
+  "articles": [
+    {
+      "id": "art-001",
+      "type": "article",
+      "section": "articles",
+      "category": "ema-philosophy",
+      "title": "The AI Data Portability Crisis: Why Your ChatGPT History is a Digital Prison",
+      "slug": "ai-data-portability-crisis",
+      "excerpt": "As AI assistants become central to how we work and create, major platforms are creating new forms of vendor lock-in. Here's why data portability matters more than ever in the age of AI.",
+      "url": "articles/ai-data-portability-crisis.html",
+      "featured_image": "🔓",
+      "author_id": "usr-sarah-chen",
+      "metadata": {
+        "created_at": "2024-10-23T10:00:00Z",
+        "published_at": "2024-10-24T08:00:00Z",
+        "updated_at": "2024-10-24T08:00:00Z",
+        "read_time": 12,
+        "word_count": 3500,
+        "status": "published",
+        "visibility": "public"
+      },
+      "seo": {
+        "meta_description": "Major AI platforms are creating new forms of vendor lock-in. Here's why data portability matters more than ever.",
+        "keywords": ["AI", "data portability", "vendor lock-in", "EMA", "ChatGPT", "Claude"]
+      },
+      "engagement": {
+        "view_count": 1247,
+        "unique_views": 892,
+        "avg_read_time": 720,
+        "completion_rate": 68,
+        "comment_count": 23,
+        "share_count": 45,
+        "bookmark_count": 67
+      }
+    },
+    {
+      "id": "art-002",
+      "type": "article",
+      "section": "articles",
+      "category": "technical",
+      "title": "Building EMA-Compliant APIs: A Developer's Guide",
+      "slug": "building-ema-compliant-apis",
+      "excerpt": "Implementing data sovereignty principles from the ground up. Learn how to build APIs with one-click export, real-time data access, and transparent competition built into the architecture.",
+      "url": "#",
+      "featured_image": "⚡",
+      "author_id": "usr-marcus-rodriguez",
+      "metadata": {
+        "created_at": "2024-10-21T14:00:00Z",
+        "published_at": "2024-10-22T09:00:00Z",
+        "read_time": 15,
+        "word_count": 4200,
+        "status": "published",
+        "visibility": "public"
+      },
+      "engagement": {
+        "view_count": 892,
+        "unique_views": 654,
+        "comment_count": 18
+      }
+    }
+  ],
+  "videos": [
+    {
+      "id": "vid-001",
+      "type": "video",
+      "section": "video",
+      "category": "video-essay",
+      "title": "The Cost of Convenience: How Free Tools Create Expensive Lock-In",
+      "slug": "cost-of-convenience",
+      "excerpt": "A 20-minute visual essay exploring how 'free' cloud services and SaaS tools create long-term dependency and what EMA offers as an alternative.",
+      "url": "#",
+      "media": {
+        "video_url": "https://youtube.com/watch?v=example",
+        "duration": 1200,
+        "thumbnail": "🎬"
+      },
+      "author_id": "usr-alex-kim",
+      "metadata": {
+        "published_at": "2024-10-20T12:00:00Z",
+        "status": "published"
+      },
+      "engagement": {
+        "view_count": 3421,
+        "avg_watch_time": 840
+      }
+    }
+  ],
+  "audio": [
+    {
+      "id": "aud-001",
+      "type": "audio",
+      "section": "audio",
+      "category": "podcast",
+      "title": "Digital Liberation #1: Interview with Signal's Meredith Whittaker",
+      "slug": "digital-liberation-001",
+      "excerpt": "In our first episode, we talk with Signal President Meredith Whittaker about privacy, sovereignty, and building technology that respects users.",
+      "url": "#",
+      "media": {
+        "audio_url": "https://podcast.example.com/ep001.mp3",
+        "duration": 2700,
+        "thumbnail": "🎙️"
+      },
+      "author_id": "usr-paul-phillips",
+      "metadata": {
+        "published_at": "2024-10-19T06:00:00Z",
+        "status": "published"
+      },
+      "engagement": {
+        "listen_count": 2156,
+        "avg_listen_time": 1800
+      }
+    }
+  ]
+}
